@@ -339,10 +339,12 @@ export default function AdminDashboard() {
                           <p className="text-xs font-bold text-cyan-600 mt-1">ID: {reg.ieee_member_id}</p>
                         )}
                         {reg.ieee_card_url && (
-                          <a href={reg.ieee_card_url} target="_blank" rel="noreferrer" className="inline-flex items-center mt-2 text-[10px] font-bold text-cyan-600 bg-cyan-50 hover:bg-cyan-100 px-2 py-1 rounded transition-colors">
-                            <IdCard className="w-3 h-3 mr-1" />
-                            View IEEE Card
-                          </a>
+                          <div className="mt-2">
+                            <p className="text-[10px] font-bold text-slate-500 mb-1">IEEE Card:</p>
+                            <a href={reg.ieee_card_url} target="_blank" rel="noreferrer" className="block w-20 h-12 bg-slate-100 rounded overflow-hidden border border-slate-200 hover:border-cyan-400 transition-colors" title="Click to view full IEEE Card">
+                              <img src={reg.ieee_card_url} alt="IEEE Card" className="w-full h-full object-cover" />
+                            </a>
+                          </div>
                         )}
                       </td>
                       <td className="p-4">
@@ -366,22 +368,20 @@ export default function AdminDashboard() {
                         </div>
                         {reg.transaction_reference && (
                           <p className="text-[10px] font-mono text-slate-400 mt-2" title="UPI Transaction ID">
-                            {reg.transaction_reference}
+                            Txn: {reg.transaction_reference}
                           </p>
+                        )}
+                        {reg.payment_screenshot_url && (
+                          <div className="mt-2">
+                            <p className="text-[10px] font-bold text-slate-500 mb-1">Payment Proof:</p>
+                            <a href={reg.payment_screenshot_url} target="_blank" rel="noreferrer" className="block w-20 h-24 bg-slate-100 rounded overflow-hidden border border-slate-200 hover:border-emerald-400 transition-colors" title="Click to view full payment screenshot">
+                              <img src={reg.payment_screenshot_url} alt="Payment Proof" className="w-full h-full object-cover" />
+                            </a>
+                          </div>
                         )}
                       </td>
                       <td className="p-4">
                         <div className="flex gap-2">
-                          {reg.payment_screenshot_url && (
-                            <a href={reg.payment_screenshot_url} target="_blank" rel="noreferrer" className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded transition-colors" title="View Payment Screenshot">
-                              <FileText className="w-4 h-4" />
-                            </a>
-                          )}
-                          {reg.ieee_card_url && (
-                            <a href={reg.ieee_card_url} target="_blank" rel="noreferrer" className="p-1.5 bg-cyan-50 hover:bg-cyan-100 text-cyan-600 rounded transition-colors" title="View IEEE Card">
-                              <IdCard className="w-4 h-4" />
-                            </a>
-                          )}
                           {reg.ticket_qr_url && (
                             <a href={reg.ticket_qr_url} target="_blank" rel="noreferrer" className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded transition-colors" title="View Ticket QR">
                               <QrCode className="w-4 h-4" />
