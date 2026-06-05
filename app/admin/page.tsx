@@ -219,33 +219,33 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6 md:p-12">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6 md:p-12 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-black text-slate-900 tracking-tight flex items-center">
-              <Lock className="w-6 h-6 mr-3 text-cyan-600" />
+            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center">
+              <Lock className="w-6 h-6 mr-3 text-cyan-600 dark:text-cyan-400" />
               Admin Dashboard
             </h1>
-            <p className="text-slate-500 font-medium mt-1">Live Registration Data</p>
+            <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Live Registration Data</p>
           </div>
           
-          <div className="flex bg-slate-200 p-1 rounded-xl w-full md:w-auto overflow-hidden">
+          <div className="flex bg-slate-200 dark:bg-slate-800 p-1 rounded-xl w-full md:w-auto overflow-hidden">
             <button
               onClick={() => setActiveTab('registrations')}
-              className={`flex-1 md:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'registrations' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+              className={`flex-1 md:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'registrations' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
             >
               Registrations
             </button>
             <button
               onClick={() => setActiveTab('scanner')}
-              className={`flex-1 md:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'scanner' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+              className={`flex-1 md:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'scanner' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
             >
               QR Scanner
             </button>
             <button
               onClick={() => setActiveTab('attendance')}
-              className={`flex-1 md:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'attendance' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+              className={`flex-1 md:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'attendance' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
             >
               Attendance
             </button>
@@ -262,28 +262,28 @@ export default function AdminDashboard() {
               <button
                 onClick={() => handleLogin()}
                 disabled={loading}
-                className="flex items-center px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold hover:bg-slate-50 transition-colors shadow-sm disabled:opacity-50"
+                className="flex items-center px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm disabled:opacity-50"
               >
                 <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
                 {loading ? 'Refreshing...' : 'Refresh'}
               </button>
               <button
                 onClick={downloadCSV}
-                className="flex items-center px-5 py-2 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/10"
+                className="flex items-center px-5 py-2 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-xl font-bold hover:bg-slate-800 dark:hover:bg-white transition-colors shadow-lg shadow-slate-900/10 dark:shadow-white/10"
               >
                 <Download className="w-4 h-4 mr-2" />
                 Export CSV
               </button>
             </div>
 
-            <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
               <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">SL No</th>
-                  <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Date</th>
-                  <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Attendee</th>
+                <tr className="bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
+                  <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">SL No</th>
+                  <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Payment Time</th>
+                  <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Attendee</th>
                   <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Contact</th>
                   <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">College/Dept</th>
                   <th className="p-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Ticket Info</th>
@@ -294,88 +294,84 @@ export default function AdminDashboard() {
               <tbody className="divide-y divide-slate-100">
                 {registrations.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-slate-500">No registrations found.</td>
+                    <td colSpan={7} className="p-8 text-center text-slate-500 dark:text-slate-400">No registrations found.</td>
                   </tr>
                 ) : (
                   registrations.map((reg, idx) => (
-                    <tr key={reg.id} className="hover:bg-slate-50/50 transition-colors">
-                      <td className="p-4 text-sm font-bold text-slate-700 text-center">
+                    <tr key={reg.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-100 dark:border-slate-800/50 last:border-0">
+                      <td className="p-4 text-sm font-bold text-slate-700 dark:text-slate-300 text-center">
                         {idx + 1}
                       </td>
                       <td className="p-4 whitespace-nowrap">
-                        <div className="text-xs text-slate-700 font-bold">
-                          {new Date(reg.created_at).toLocaleString()}
+                        <div className="text-xs text-slate-700 dark:text-slate-300 font-bold">
+                          {reg.payment_submitted_at ? new Date(reg.payment_submitted_at).toLocaleString() : 'N/A'}
                         </div>
                       </td>
                       <td className="p-4">
-                        <p className="font-bold text-slate-900">{reg.full_name}</p>
-                        <p className="text-xs text-slate-500">{reg.year_designation}</p>
+                        <p className="font-bold text-slate-900 dark:text-white">{reg.full_name}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{reg.year_designation}</p>
                       </td>
                       <td className="p-4">
-                        <p className="text-sm font-medium text-slate-700">{reg.email}</p>
-                        <p className="text-xs text-slate-500">{reg.phone}</p>
+                        <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{reg.email}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{reg.phone}</p>
                       </td>
                       <td className="p-4">
-                        <p className="text-sm font-medium text-slate-700">{reg.college}</p>
-                        <p className="text-xs text-slate-500">{reg.department}</p>
+                        <p className="text-sm font-medium text-slate-700 dark:text-slate-300">{reg.college}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">{reg.department}</p>
                       </td>
                       <td className="p-4">
-                        <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-bold ${reg.is_ieee_member ? 'bg-cyan-50 text-cyan-700' : 'bg-slate-100 text-slate-700'}`}>
+                        <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-bold ${reg.is_ieee_member ? 'bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}>
                           {reg.is_ieee_member ? 'IEEE Member' : 'General'}
                         </span>
-                        <p className="text-xs font-mono text-slate-500 mt-1">{reg.ticket_id}</p>
+                        <p className="text-xs font-mono text-slate-500 dark:text-slate-400 mt-1">{reg.ticket_id}</p>
                         {reg.ieee_member_id && (
-                          <p className="text-xs font-bold text-cyan-600 mt-1">ID: {reg.ieee_member_id}</p>
+                          <p className="text-xs font-bold text-cyan-600 dark:text-cyan-400 mt-1">ID: {reg.ieee_member_id}</p>
                         )}
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           {reg.payment_status === 'pending' ? (
                             <div className="flex flex-col items-start gap-2">
-                              <span className="flex items-center text-amber-600 text-xs font-bold bg-amber-50 px-2 py-1 rounded">Pending</span>
+                              <span className="flex items-center text-amber-600 dark:text-amber-400 text-xs font-bold bg-amber-50 dark:bg-amber-900/30 px-2 py-1 rounded">Pending</span>
                               <div className="flex gap-1">
-                                <button onClick={() => updateStatus(reg.id, 'verified')} className="text-[10px] bg-emerald-100 text-emerald-700 hover:bg-emerald-200 px-2 py-1 rounded transition-colors font-bold">Approve</button>
-                                <button onClick={() => updateStatus(reg.id, 'rejected')} className="text-[10px] bg-red-100 text-red-700 hover:bg-red-200 px-2 py-1 rounded transition-colors font-bold">Reject</button>
+                                <button onClick={() => updateStatus(reg.id, 'verified')} className="text-[10px] bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-800/50 px-2 py-1 rounded transition-colors font-bold">Approve</button>
+                                <button onClick={() => updateStatus(reg.id, 'rejected')} className="text-[10px] bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-800/50 px-2 py-1 rounded transition-colors font-bold">Reject</button>
                               </div>
                             </div>
                           ) : reg.payment_status === 'verified' ? (
-                            <span className="flex items-center text-emerald-600 text-xs font-bold bg-emerald-50 px-2 py-1 rounded">
+                            <span className="flex items-center text-emerald-600 dark:text-emerald-400 text-xs font-bold bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded">
                               <CheckCircle2 className="w-3 h-3 mr-1" />
                               Verified
                             </span>
                           ) : (
-                            <span className="flex items-center text-red-600 text-xs font-bold bg-red-50 px-2 py-1 rounded">Rejected</span>
+                            <span className="flex items-center text-red-600 dark:text-red-400 text-xs font-bold bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded">Rejected</span>
                           )}
                         </div>
                         {reg.transaction_reference && (
-                          <p className="text-[10px] font-mono text-slate-400 mt-2" title="UPI Transaction ID">
+                          <p className="text-[10px] font-mono text-slate-400 dark:text-slate-500 mt-2" title="UPI Transaction ID">
                             {reg.transaction_reference}
                           </p>
                         )}
-                        {reg.payment_submitted_at && (
-                          <p className="text-[10px] text-slate-400 mt-1" title="Payment Submitted At">
-                            {new Date(reg.payment_submitted_at).toLocaleString()}
-                          </p>
-                        )}
+                        {/* We removed the redundant payment_submitted_at text here since it's now its own column */}
                       </td>
                       <td className="p-4">
                         <div className="flex gap-2">
                           {reg.payment_screenshot_url && (
-                            <a href={reg.payment_screenshot_url} target="_blank" rel="noreferrer" className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded transition-colors" title="View Payment Screenshot">
+                            <a href={reg.payment_screenshot_url} target="_blank" rel="noreferrer" className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded transition-colors" title="View Payment Screenshot">
                               <FileText className="w-4 h-4" />
                             </a>
                           )}
                           {reg.ieee_card_url && (
-                            <a href={reg.ieee_card_url} target="_blank" rel="noreferrer" className="p-1.5 bg-cyan-50 hover:bg-cyan-100 text-cyan-600 rounded transition-colors" title="View IEEE Card">
+                            <a href={reg.ieee_card_url} target="_blank" rel="noreferrer" className="p-1.5 bg-cyan-50 dark:bg-cyan-900/30 hover:bg-cyan-100 dark:hover:bg-cyan-800/50 text-cyan-600 dark:text-cyan-400 rounded transition-colors" title="View IEEE Card">
                               <IdCard className="w-4 h-4" />
                             </a>
                           )}
                           {reg.ticket_qr_url && (
-                            <a href={reg.ticket_qr_url} target="_blank" rel="noreferrer" className="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded transition-colors" title="View Ticket QR">
+                            <a href={reg.ticket_qr_url} target="_blank" rel="noreferrer" className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded transition-colors" title="View Ticket QR">
                               <QrCode className="w-4 h-4" />
                             </a>
                           )}
-                          <button onClick={() => deleteRegistration(reg.id)} className="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded transition-colors ml-auto" title="Delete Registration">
+                          <button onClick={() => deleteRegistration(reg.id)} className="p-1.5 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-800/50 text-red-600 dark:text-red-400 rounded transition-colors ml-auto" title="Delete Registration">
                             <Trash2 className="w-4 h-4" />
                           </button>
                         </div>

@@ -228,6 +228,15 @@ export default function RegistrationForm() {
       return;
     }
 
+    const now = new Date();
+    const fileTime = new Date(file.lastModified);
+    const diffInMinutes = Math.abs(now.getTime() - fileTime.getTime()) / (1000 * 60);
+
+    if (diffInMinutes > 10) {
+      setError('Verification Failed: The uploaded screenshot appears to be older than 10 minutes. Please take a fresh screenshot of your recent payment and upload it.');
+      return;
+    }
+
     setUploading(true);
     setError(null);
 
@@ -312,17 +321,17 @@ export default function RegistrationForm() {
     }
   };
 
-  const labelClasses = "block text-sm font-bold text-slate-700 mb-2 ml-1";
+  const labelClasses = "block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2 ml-1";
   const inputContainerClasses = "relative group";
-  const iconWrapperClasses = "absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-cyan-600 transition-colors z-10";
-  const inputClasses = "w-full pl-12 pr-4 py-3.5 bg-white/40 border border-white/60 rounded-2xl focus:bg-white/80 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/10 outline-none transition-all text-slate-800 placeholder-slate-400 shadow-sm backdrop-blur-sm relative";
+  const iconWrapperClasses = "absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-cyan-600 dark:group-focus-within:text-cyan-400 transition-colors z-10";
+  const inputClasses = "w-full pl-12 pr-4 py-3.5 bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-800/60 rounded-2xl focus:bg-white/80 dark:focus:bg-slate-800/80 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/10 outline-none transition-all text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 shadow-sm backdrop-blur-sm relative";
 
   if (success) {
     return (
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white/70 backdrop-blur-2xl p-8 sm:p-14 rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-white/60 text-center max-w-4xl mx-auto relative overflow-hidden"
+        className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl p-8 sm:p-14 rounded-[2rem] shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-white/60 dark:border-slate-800/60 text-center max-w-4xl mx-auto relative overflow-hidden"
       >
         <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 via-transparent to-cyan-400/10 pointer-events-none"></div>
         <div className="relative z-10">
@@ -333,8 +342,8 @@ export default function RegistrationForm() {
           >
             <CheckCircle2 className="w-20 h-20 sm:w-24 sm:h-24 text-emerald-500 mx-auto mb-6 sm:mb-8 drop-shadow-[0_0_25px_rgba(16,185,129,0.4)]" />
           </motion.div>
-          <h2 className="text-3xl sm:text-4xl font-black text-navy mb-4 tracking-tight">Registration Complete!</h2>
-          <p className="text-slate-600 mb-8 text-base sm:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-black text-navy dark:text-white mb-4 tracking-tight">Registration Complete!</h2>
+          <p className="text-slate-600 dark:text-slate-300 mb-8 text-base sm:text-lg font-medium leading-relaxed max-w-2xl mx-auto">
             Thank you for securing your spot. Your payment proof is under review. 
             We&apos;ll send a confirmation email once verified.
           </p>
@@ -437,7 +446,7 @@ export default function RegistrationForm() {
 
           </div>
 
-          <div className="mt-8 inline-flex items-center justify-center px-6 py-3 bg-emerald-50 text-emerald-700 rounded-full font-semibold border border-emerald-200">
+          <div className="mt-8 inline-flex items-center justify-center px-6 py-3 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full font-semibold border border-emerald-200 dark:border-emerald-800/50">
             <ShieldCheck className="w-5 h-5 mr-2" />
             Spot Reserved Successfully
           </div>
@@ -453,7 +462,7 @@ export default function RegistrationForm() {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white/70 backdrop-blur-3xl p-8 sm:p-12 rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-white/80 max-w-lg mx-auto relative overflow-hidden"
+        className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-3xl p-8 sm:p-12 rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-white/80 dark:border-slate-800/80 max-w-lg mx-auto relative overflow-hidden"
       >
         <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-cyan-400 to-fuchsia-500"></div>
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-fuchsia-400/20 blur-[80px] rounded-full pointer-events-none"></div>
@@ -464,11 +473,11 @@ export default function RegistrationForm() {
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-100 to-fuchsia-100 border border-white mb-6 shadow-inner">
               <QrCode className="w-10 h-10 text-cyan-600 drop-shadow-sm" />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-navy mb-2 sm:mb-3 tracking-tight">Complete Payment</h2>
-            <p className="text-slate-600 font-medium text-base sm:text-lg">Scan or click the QR to open your UPI app.</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-navy dark:text-white mb-2 sm:mb-3 tracking-tight">Complete Payment</h2>
+            <p className="text-slate-600 dark:text-slate-400 font-medium text-base sm:text-lg">Scan or click the QR to open your UPI app.</p>
           </div>
 
-          <div className="bg-white/60 p-8 rounded-3xl mb-8 flex flex-col items-center border border-white shadow-sm backdrop-blur-md relative overflow-hidden group">
+          <div className="bg-white/60 dark:bg-slate-900/60 p-8 rounded-3xl mb-8 flex flex-col items-center border border-white dark:border-slate-800 shadow-sm backdrop-blur-md relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-fuchsia-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             
             <a href={upiLink} className="w-56 h-56 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-center mb-6 shadow-md relative overflow-hidden p-4 hover:border-cyan-400 transition-colors cursor-pointer block" title="Click to open GPay, PhonePe, Paytm, etc.">
@@ -530,9 +539,24 @@ export default function RegistrationForm() {
                   accept="image/*"
                   onChange={(e) => setFile(e.target.files?.[0] || null)}
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-white/40 border border-white/60 rounded-2xl focus:bg-white/80 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/10 outline-none transition-all text-slate-700 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-cyan-100 file:text-cyan-800 hover:file:bg-cyan-200 cursor-pointer shadow-sm backdrop-blur-sm"
+                  className="w-full pl-12 pr-4 py-3 bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-800/60 rounded-2xl focus:bg-white/80 dark:focus:bg-slate-800/80 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/10 outline-none transition-all text-slate-700 dark:text-slate-200 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-cyan-100 dark:file:bg-cyan-900/40 file:text-cyan-800 dark:file:text-cyan-400 hover:file:bg-cyan-200 dark:hover:file:bg-cyan-800/60 cursor-pointer shadow-sm backdrop-blur-sm"
                 />
               </div>
+            </div>
+
+            <div className="text-sm font-medium text-slate-600 dark:text-slate-400 bg-cyan-50 dark:bg-cyan-900/20 p-4 rounded-xl border border-cyan-100 dark:border-cyan-800">
+              <p className="mb-3 flex items-start">
+                <AlertCircle className="w-4 h-4 text-cyan-600 dark:text-cyan-400 mr-2 shrink-0 mt-0.5" />
+                <span><strong className="text-cyan-700 dark:text-cyan-400">Important:</strong> Please ensure your payment screenshot is recent (taken within the last 10 minutes), otherwise it will be rejected.</span>
+              </p>
+              <p className="mb-3 flex items-start">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mr-2 shrink-0 mt-0.5" />
+                <span><strong className="text-emerald-700 dark:text-emerald-400">QR Code Issues?</strong> If the QR code doesn't work, directly pay to the UPI ID shown above and upload the screenshot.</span>
+              </p>
+              <p className="flex items-start">
+                <Phone className="w-4 h-4 text-slate-500 dark:text-slate-400 mr-2 shrink-0 mt-0.5" />
+                <span>For further assistance, please contact <strong>Ananthapadmanabhan V</strong> at <a href="https://wa.me/918075648240" target="_blank" rel="noreferrer" className="text-emerald-600 dark:text-emerald-400 hover:underline">+91 80756 48240</a>.</span>
+              </p>
             </div>
 
             <button
@@ -570,7 +594,7 @@ export default function RegistrationForm() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       onSubmit={handleSubmit} 
-      className="bg-white/60 backdrop-blur-3xl p-8 sm:p-12 rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-white/80 max-w-2xl mx-auto relative overflow-hidden"
+      className="bg-white/60 dark:bg-slate-900/60 backdrop-blur-3xl p-8 sm:p-12 rounded-[2.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-white/80 dark:border-slate-800/80 max-w-2xl mx-auto relative overflow-hidden"
     >
       {/* Decorative background elements */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-400/10 blur-[100px] rounded-full pointer-events-none"></div>
@@ -578,8 +602,8 @@ export default function RegistrationForm() {
       
       <div className="relative z-10">
         <div className="text-center mb-10 sm:mb-12">
-          <h2 className="text-3xl sm:text-4xl font-black text-navy mb-3 sm:mb-4 tracking-tight">Reserve Your Spot</h2>
-          <p className="text-slate-600 font-medium text-base sm:text-lg">Join us for the AI Intelli Week</p>
+          <h2 className="text-3xl sm:text-4xl font-black text-navy dark:text-white mb-3 sm:mb-4 tracking-tight">Reserve Your Spot</h2>
+          <p className="text-slate-600 dark:text-slate-400 font-medium text-base sm:text-lg">Join us for the AI Intelli Week</p>
         </div>
         
         {error && (
@@ -645,15 +669,15 @@ export default function RegistrationForm() {
               )}
 
               {(emailState === 'sent' || emailState === 'verifying') && (
-                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
-                  <label className="block text-xs font-bold text-slate-600 mb-2">Enter 6-Digit Code</label>
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-3 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                  <label className="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-2">Enter 6-Digit Code</label>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       type="text"
                       maxLength={6}
                       value={otp}
                       onChange={(e) => setOtp(e.target.value)}
-                      className="w-full min-w-0 sm:flex-1 bg-white border border-slate-300 rounded-lg px-3 py-2 text-center tracking-[0.5em] font-bold focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 outline-none"
+                      className="w-full min-w-0 sm:flex-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white rounded-lg px-3 py-2 text-center tracking-[0.5em] font-bold focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 outline-none"
                       placeholder="------"
                     />
                     <button 
@@ -775,12 +799,12 @@ export default function RegistrationForm() {
             </div>
           </div>
 
-          <div className="flex items-center p-4 bg-white/40 border border-white/60 rounded-2xl shadow-sm backdrop-blur-sm cursor-pointer group hover:bg-white/60 transition-colors" onClick={() => setFormData(prev => ({ ...prev, isIeeeMember: !prev.isIeeeMember }))}>
-            <div className={`w-6 h-6 flex items-center justify-center rounded border-2 transition-colors mr-3 ${formData.isIeeeMember ? 'bg-cyan-500 border-cyan-500' : 'bg-white border-slate-300'}`}>
+          <div className="flex items-center p-4 bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-800/60 rounded-2xl shadow-sm backdrop-blur-sm cursor-pointer group hover:bg-white/60 dark:hover:bg-slate-800/60 transition-colors" onClick={() => setFormData(prev => ({ ...prev, isIeeeMember: !prev.isIeeeMember }))}>
+            <div className={`w-6 h-6 flex items-center justify-center rounded border-2 transition-colors mr-3 ${formData.isIeeeMember ? 'bg-cyan-500 border-cyan-500' : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600'}`}>
               {formData.isIeeeMember && <CheckCircle2 className="w-4 h-4 text-white" />}
             </div>
-            <label className="text-sm sm:text-base text-slate-700 font-bold select-none cursor-pointer flex-1">
-              I am an IEEE Member <span className="block sm:inline text-cyan-700 font-black sm:ml-1">(Pay ₹549 instead of ₹799)</span>
+            <label className="text-sm sm:text-base text-slate-700 dark:text-slate-200 font-bold select-none cursor-pointer flex-1">
+              I am an IEEE Member <span className="block sm:inline text-cyan-700 dark:text-cyan-400 font-black sm:ml-1">(Pay ₹549 instead of ₹799)</span>
             </label>
           </div>
 
@@ -816,7 +840,7 @@ export default function RegistrationForm() {
                     accept="image/*"
                     onChange={(e) => setIeeeCardFile(e.target.files?.[0] || null)}
                     required={formData.isIeeeMember}
-                    className="w-full pl-12 pr-4 py-3 bg-white/40 border border-white/60 rounded-2xl focus:bg-white/80 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/10 outline-none transition-all text-slate-700 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-cyan-100 file:text-cyan-800 hover:file:bg-cyan-200 cursor-pointer shadow-sm backdrop-blur-sm"
+                    className="w-full pl-12 pr-4 py-3 bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-800/60 rounded-2xl focus:bg-white/80 dark:focus:bg-slate-800/80 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-400/10 outline-none transition-all text-slate-700 dark:text-slate-200 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-cyan-100 dark:file:bg-cyan-900/40 file:text-cyan-800 dark:file:text-cyan-400 hover:file:bg-cyan-200 dark:hover:file:bg-cyan-800/60 cursor-pointer shadow-sm backdrop-blur-sm"
                   />
                   <div className="mt-3 text-right">
                     <a href="/ieee-guide" className="text-sm font-bold text-cyan-600 hover:text-cyan-700 hover:underline transition-all">

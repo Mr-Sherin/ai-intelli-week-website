@@ -71,16 +71,16 @@ export default function Hero() {
             return (
               <motion.div 
                 key={i}
-                whileHover={{ rotateX: 5, rotateY: 5, scale: 1.05, z: 20, backgroundColor: "rgba(255,255,255,0.8)" }}
+                whileHover={{ rotateX: 5, rotateY: 5, scale: 1.05, z: 20 }}
                 transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="bg-white/50 backdrop-blur-xl border border-white/60 rounded-2xl p-6 text-left flex items-start space-x-4 shadow-[0_8px_30px_rgba(0,0,0,0.05)] relative overflow-hidden"
+                className="bg-white/50 dark:bg-slate-900/50 hover:bg-white/80 dark:hover:bg-slate-800/80 transition-colors duration-300 backdrop-blur-xl border border-white/60 dark:border-slate-800/60 rounded-2xl p-6 text-left flex items-start space-x-4 shadow-[0_8px_30px_rgba(0,0,0,0.05)] relative overflow-hidden"
                 style={{ transformStyle: "preserve-3d" }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent opacity-80 pointer-events-none"></div>
-                <Icon className="text-cyan-600 w-8 h-8 shrink-0 mt-1" style={{ transform: "translateZ(15px)" }} />
+                <div className="absolute inset-0 bg-gradient-to-br from-white/40 dark:from-slate-800/40 to-transparent opacity-80 pointer-events-none"></div>
+                <Icon className="text-cyan-600 dark:text-cyan-400 w-8 h-8 shrink-0 mt-1" style={{ transform: "translateZ(15px)" }} />
                 <div style={{ transform: "translateZ(15px)" }}>
-                  <h3 className="text-navy font-bold mb-1 tracking-wide">{item.title}</h3>
-                  <p className="text-slate-600 text-sm font-medium">{item.desc}</p>
+                  <h3 className="text-navy dark:text-white font-bold mb-1 tracking-wide">{item.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm font-medium">{item.desc}</p>
                 </div>
               </motion.div>
             )
