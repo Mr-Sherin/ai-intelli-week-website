@@ -1,6 +1,6 @@
 # AI Intelli Week Website
 
-![AI Intelli Week](public/hero_ai.png)
+![AI Intelli Week]
 
 A modern, high-performance web application built for the **AI Intelli Week** internship and learning initiative. The event is organized by Lourdes Matha College of Science and Technology in collaboration with **IEEE**, **IEDC**, and **GDG**.
 
@@ -29,11 +29,7 @@ A modern, high-performance web application built for the **AI Intelli Week** int
 
 # About Me
 
-Hi, I'm Sherin, a B.Tech Computer Science student with a strong interest in web development, AI, and entrepreneurship.
-
-I enjoy building modern, responsive, and user-focused applications while continuously learning new technologies.
-
-This repository contains a website developed by me to demonstrate my development skills and creativity.
+Hi, I'm Sherin, a B.Tech Computer Science student with a strong interest in web development, AI, and entrepreneurship.I enjoy building modern, responsive, and user-focused applications while continuously learning new technologies.This repository contains a website developed by me to demonstrate my development skills and creativity.
 
 Feel free to explore the project and share your feedback.
 
