@@ -303,20 +303,9 @@ export default function AdminDashboard() {
                         {idx + 1}
                       </td>
                       <td className="p-4 whitespace-nowrap">
-                        <div className="mb-2">
-                          <div className="text-xs text-slate-700 font-bold">
-                            {new Date(reg.created_at).toLocaleString()}
-                          </div>
-                          <p className="text-[10px] text-slate-400 mt-0.5">Form Submitted</p>
+                        <div className="text-xs text-slate-700 font-bold">
+                          {new Date(reg.created_at).toLocaleString()}
                         </div>
-                        {reg.payment_submitted_at && (
-                          <div>
-                            <div className="text-xs text-slate-700 font-bold">
-                              {new Date(reg.payment_submitted_at).toLocaleString()}
-                            </div>
-                            <p className="text-[10px] text-emerald-600 font-bold mt-0.5">Payment Submitted</p>
-                          </div>
-                        )}
                       </td>
                       <td className="p-4">
                         <p className="font-bold text-slate-900">{reg.full_name}</p>
