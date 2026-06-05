@@ -456,7 +456,7 @@ export default function RegistrationForm() {
   }
 
   if (step === 2) {
-    const upiLink = `upi://pay?pa=anusas860@okicici&pn=Anusa%20S&am=${formData.isIeeeMember ? '549.00' : '799.00'}&cu=INR`;
+    const upiLink = `upi://pay?pa=anusas860@okicici&pn=AnusaS&am=${formData.isIeeeMember ? '549.00' : '799.00'}&cu=INR`;
 
     return (
       <motion.div 
@@ -474,7 +474,9 @@ export default function RegistrationForm() {
               <QrCode className="w-10 h-10 text-cyan-600 drop-shadow-sm" />
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-navy dark:text-white mb-2 sm:mb-3 tracking-tight">Complete Payment</h2>
-            <p className="text-slate-600 dark:text-slate-400 font-medium text-base sm:text-lg">Scan or click the QR to open your UPI app.</p>
+            <p className="text-slate-600 dark:text-slate-400 font-medium text-sm sm:text-base max-w-md mx-auto">
+              You can try to pay by <strong>clicking the QR code</strong> to open your payment app directly. If that doesn't work, take a screenshot and scan it in your UPI app.
+            </p>
           </div>
 
           <div className="bg-white/60 dark:bg-slate-900/60 p-8 rounded-3xl mb-8 flex flex-col items-center border border-white dark:border-slate-800 shadow-sm backdrop-blur-md relative overflow-hidden group">
@@ -501,18 +503,6 @@ export default function RegistrationForm() {
               <div className="inline-block px-6 py-2 bg-slate-900 text-white rounded-full font-black text-xl shadow-lg shadow-slate-900/20 mb-4">
                 {formData.isIeeeMember ? '₹549' : '₹799'}
               </div>
-              <a 
-                href={upiLink} 
-                target="_top"
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.href = upiLink;
-                }}
-                className="block w-full py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl font-bold text-lg transition-all shadow-md active:scale-95 text-center cursor-pointer md:hidden"
-              >
-                Open UPI App on Phone
-              </a>
             </div>
           </div>
 
