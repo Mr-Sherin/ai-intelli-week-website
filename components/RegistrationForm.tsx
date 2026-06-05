@@ -447,7 +447,7 @@ export default function RegistrationForm() {
   }
 
   if (step === 2) {
-    const upiLink = `upi://pay?pa=anusas860@okicici&pn=AI%20Intelli%20Week%20Registration&cu=INR&am=${formData.isIeeeMember ? '549.00' : '799.00'}`;
+    const upiLink = `upi://pay?pa=anusas860@okicici&pn=Anusa%20S&am=${formData.isIeeeMember ? '549.00' : '799.00'}&cu=INR`;
 
     return (
       <motion.div 
