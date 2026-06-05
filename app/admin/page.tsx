@@ -363,6 +363,11 @@ export default function AdminDashboard() {
                             {reg.transaction_reference}
                           </p>
                         )}
+                        {reg.payment_submitted_at && (
+                          <p className="text-[10px] text-slate-400 mt-1" title="Payment Submitted At">
+                            {new Date(reg.payment_submitted_at).toLocaleString()}
+                          </p>
+                        )}
                       </td>
                       <td className="p-4">
                         <div className="flex gap-2">
