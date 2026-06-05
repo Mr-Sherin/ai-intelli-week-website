@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { Mail } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 
 const InstagramIcon = ({ className }: { className?: string }) => (
   <svg 
@@ -39,7 +39,7 @@ export default function AboutPage() {
       name: "IEDC",
       fullName: "Innovation and Entrepreneurship Development Centre",
       description: "IEDC aims to foster a culture of innovation and entrepreneurship among students. We provide a platform for aspiring entrepreneurs to develop their ideas into viable products through mentorship, funding opportunities, and industry connections.",
-      email: "iedc.lmcst@gmail.com",
+      email: "Life@lmcst.ac.in",
       instagram: "lmc_innovatex",
       instagramLink: "https://www.instagram.com/lmc_innovatex?igsh=MWxtYXBreHRmZmg5dw==",
       color: "from-orange-500 to-amber-500",
@@ -50,12 +50,33 @@ export default function AboutPage() {
       name: "GDG",
       fullName: "Google Developer Groups",
       description: "GDG On Campus is a community for students interested in Google developer technologies. We host events covering a wide range of technical topics where you can learn new skills in a hands-on, peer-to-peer learning environment.",
-      email: "gdg.lmcst@gmail.com",
+      email: "Nayna.an3@gmail.com",
       instagram: "gdg_lmcst",
       instagramLink: "https://www.instagram.com/gdg_lmcst?igsh=Z2h6amc5YXZqcDA5",
       color: "from-green-500 to-emerald-500",
       logo: "/gdg-logo.png",
       imageClass: "scale-[2]"
+    },
+    {
+      id: "mulearn",
+      name: "µLearn",
+      fullName: "GTech µLearn",
+      description: "GTech µLearn is an industry-academia initiative to bridge the skill gap. We empower students with hands-on learning, peer-to-peer communities, and industry mentorship to build practical skills.",
+      email: "Mulearn@lmcst.ac.in",
+      instagram: "mulearn.lmcst",
+      instagramLink: "https://www.instagram.com/mulearn.lmcst?igsh=MTRkbnl4NHU0YXgxYg==",
+      color: "from-purple-500 to-indigo-500",
+      logo: "/mulearn-logo.png",
+      imageClass: "scale-105"
+    },
+    {
+      name: "IIC",
+      fullName: "Institution's Innovation Council",
+      description: "An initiative by the Ministry of Education to systematically foster the culture of innovation and start-up ecosystem in higher education institutions, preparing students for the entrepreneurial journey.",
+      phone: "+91 6282296196",
+      color: "from-blue-600 to-red-500",
+      logo: "/iic-logo.png",
+      imageClass: "scale-110"
     }
   ];
 
@@ -85,7 +106,7 @@ export default function AboutPage() {
           {organizations.map((org, index) => (
             <motion.div
               key={org.name}
-              id={org.name.toLowerCase()}
+              id={org.id || org.name.toLowerCase()}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.15, type: "spring", stiffness: 300, damping: 25 }}
@@ -113,27 +134,43 @@ export default function AboutPage() {
               </div>
 
               <div className="mt-auto space-y-3 pt-6 border-t border-slate-200/50 dark:border-slate-700/50">
-                <a 
-                  href={`mailto:${org.email}`} 
-                  className="flex items-center text-slate-600 dark:text-slate-400 hover:text-navy dark:hover:text-white font-semibold transition-colors group"
-                >
-                  <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mr-3 group-hover:bg-slate-100 dark:group-hover:bg-slate-700 transition-colors shadow-sm border border-transparent dark:border-slate-700">
-                    <Mail className="w-4 h-4 text-slate-700 dark:text-slate-300" />
-                  </div>
-                  {org.email}
-                </a>
+                {org.email && (
+                  <a 
+                    href={`mailto:${org.email}`} 
+                    className="flex items-center text-slate-600 dark:text-slate-400 hover:text-navy dark:hover:text-white font-semibold transition-colors group"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mr-3 group-hover:bg-slate-100 dark:group-hover:bg-slate-700 transition-colors shadow-sm border border-transparent dark:border-slate-700">
+                      <Mail className="w-4 h-4 text-slate-700 dark:text-slate-300" />
+                    </div>
+                    {org.email}
+                  </a>
+                )}
+
+                {org.phone && (
+                  <a 
+                    href={`tel:${org.phone.replace(/\s+/g, '')}`} 
+                    className="flex items-center text-slate-600 dark:text-slate-400 hover:text-navy dark:hover:text-white font-semibold transition-colors group"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mr-3 group-hover:bg-slate-100 dark:group-hover:bg-slate-700 transition-colors shadow-sm border border-transparent dark:border-slate-700">
+                      <Phone className="w-4 h-4 text-slate-700 dark:text-slate-300" />
+                    </div>
+                    {org.phone}
+                  </a>
+                )}
                 
-                <a 
-                  href={org.instagramLink} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 font-semibold transition-colors group"
-                >
-                  <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mr-3 group-hover:bg-pink-50 dark:group-hover:bg-slate-700 transition-colors shadow-sm border border-transparent dark:border-slate-700">
-                    <InstagramIcon className="w-4 h-4 text-pink-600 dark:text-pink-400" />
-                  </div>
-                  @{org.instagram}
-                </a>
+                {org.instagram && org.instagramLink && (
+                  <a 
+                    href={org.instagramLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center text-slate-600 dark:text-slate-400 hover:text-pink-600 dark:hover:text-pink-400 font-semibold transition-colors group"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-white dark:bg-slate-800 flex items-center justify-center mr-3 group-hover:bg-pink-50 dark:group-hover:bg-slate-700 transition-colors shadow-sm border border-transparent dark:border-slate-700">
+                      <InstagramIcon className="w-4 h-4 text-pink-600 dark:text-pink-400" />
+                    </div>
+                    @{org.instagram}
+                  </a>
+                )}
               </div>
             </motion.div>
           ))}

@@ -68,6 +68,16 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/about#mulearn" className="text-slate-300 hover:text-white text-sm transition-colors">
+                  µLearn
+                </Link>
+              </li>
+              <li>
+                <Link href="/about#iic" className="text-slate-300 hover:text-white text-sm transition-colors">
+                  IIC
+                </Link>
+              </li>
+              <li>
                 <Link href="/speakers" className="text-slate-300 hover:text-white text-sm transition-colors">
                   Speakers
                 </Link>

@@ -65,7 +65,7 @@ export default function Hero() {
           {[
             { icon: Calendar, title: 'Date', desc: 'June 15 - 22, 2026' },
             { icon: MapPin, title: 'Venue', desc: 'Lourdes Matha College of Science and Technology' },
-            { icon: Building, title: 'Host', desc: 'IEEE, IEDC, GDG' }
+            { icon: Building, title: 'Host', desc: <>IEEE, IEDC, GDG,<br/>µLearn, IIC</> }
           ].map((item, i) => {
             const Icon = item.icon;
             return (

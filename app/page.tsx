@@ -181,7 +181,7 @@ export default function Home() {
       </section>
 
       {/* Week Schedule Section */}
-      <section className="py-24 relative z-10 mb-20">
+      <section id="schedule" className="py-24 relative z-10 mb-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white/40 dark:bg-slate-900/40 backdrop-blur-3xl rounded-3xl border border-white/60 dark:border-slate-800/60 shadow-[0_10px_40px_rgba(0,0,0,0.05)] overflow-hidden relative">
             
