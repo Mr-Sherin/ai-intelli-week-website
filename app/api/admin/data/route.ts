@@ -30,7 +30,6 @@ export async function POST(request: Request) {
     const { data, error } = await supabaseAdmin
       .from('registrations')
       .select('*')
-      .not('payment_screenshot_url', 'is', null)
       .order('created_at', { ascending: false });
 
     if (error) {
