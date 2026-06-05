@@ -480,7 +480,13 @@ export default function RegistrationForm() {
           <div className="bg-white/60 dark:bg-slate-900/60 p-8 rounded-3xl mb-8 flex flex-col items-center border border-white dark:border-slate-800 shadow-sm backdrop-blur-md relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-fuchsia-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             
-            <a href={upiLink} className="w-56 h-56 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-center mb-6 shadow-md relative overflow-hidden p-4 hover:border-cyan-400 transition-colors cursor-pointer block" title="Click to open GPay, PhonePe, Paytm, etc.">
+            <a 
+              href={upiLink} 
+              target="_top"
+              rel="noopener noreferrer"
+              className="w-56 h-56 bg-white border-2 border-slate-100 rounded-2xl flex items-center justify-center mb-6 shadow-md relative overflow-hidden p-4 hover:border-cyan-400 transition-colors cursor-pointer block" 
+              title="Click to open GPay, PhonePe, Paytm, etc."
+            >
               <QRCode 
                 value={upiLink} 
                 size={256} 
@@ -495,7 +501,16 @@ export default function RegistrationForm() {
               <div className="inline-block px-6 py-2 bg-slate-900 text-white rounded-full font-black text-xl shadow-lg shadow-slate-900/20 mb-4">
                 {formData.isIeeeMember ? '₹549' : '₹799'}
               </div>
-              <a href={upiLink} className="block w-full py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl font-bold text-lg transition-all shadow-md active:scale-95 md:hidden">
+              <a 
+                href={upiLink} 
+                target="_top"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.location.href = upiLink;
+                }}
+                className="block w-full py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl font-bold text-lg transition-all shadow-md active:scale-95 text-center cursor-pointer md:hidden"
+              >
                 Open UPI App on Phone
               </a>
             </div>
