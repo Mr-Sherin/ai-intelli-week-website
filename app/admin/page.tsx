@@ -338,6 +338,12 @@ export default function AdminDashboard() {
                         {reg.ieee_member_id && (
                           <p className="text-xs font-bold text-cyan-600 mt-1">ID: {reg.ieee_member_id}</p>
                         )}
+                        {reg.ieee_card_url && (
+                          <a href={reg.ieee_card_url} target="_blank" rel="noreferrer" className="inline-flex items-center mt-2 text-[10px] font-bold text-cyan-600 bg-cyan-50 hover:bg-cyan-100 px-2 py-1 rounded transition-colors">
+                            <IdCard className="w-3 h-3 mr-1" />
+                            View IEEE Card
+                          </a>
+                        )}
                       </td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
