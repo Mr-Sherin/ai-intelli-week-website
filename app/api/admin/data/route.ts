@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     const { data, error } = await supabaseAdmin
       .from('registrations')
       .select('*')
-      .or('payment_screenshot_url.not.is.null,payment_status.eq.verified')
+      .or('payment_screenshot_url.not.is.null,payment_status.eq.verified,ieee_card_url.not.is.null')
       .order('created_at', { ascending: false });
 
     if (error) {
