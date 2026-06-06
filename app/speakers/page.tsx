@@ -39,14 +39,14 @@ const speakers: SpeakerType[] = [
   {
     name: "Adithyan L",
     role: "Technical Manager at WagFu",
-    image: "https://ui-avatars.com/api/?name=Adithyan+L&background=0D8ABC&color=fff&size=256",
+    image: "/speaker-adithyan.jpg",
     linkedin: "https://www.linkedin.com/in/adithyanaconitum",
     instagram: ""
   },
   {
     name: "Alwi Sam",
     role: "Managing Director, Foxtech Pvt Solutions",
-    image: "https://ui-avatars.com/api/?name=Alwi+Sam&background=0D8ABC&color=fff&size=256",
+    image: "/speaker-alwi.jpg",
     linkedin: "https://www.linkedin.com/in/alwi-sam-s-p-2a7017243?utm_source=share_via&utm_content=profile&utm_medium=member_android",
     instagram: "https://www.instagram.com/_alwi_sam_?igsh=MWkzODFhMmNpOTkxMw=="
   }
