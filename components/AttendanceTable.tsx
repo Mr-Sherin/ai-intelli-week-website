@@ -1,6 +1,6 @@
 import { CheckCircle2, XCircle } from 'lucide-react';
 
-export default function AttendanceTable({ registrations }: { registrations: any[] }) {
+export default function AttendanceTable({ registrations }: { registrations: any /* eslint-disable-line @typescript-eslint/no-explicit-any */[] /* eslint-disable-line @typescript-eslint/no-explicit-any */ }) {
   // The specific dates for the internship in YYYY-MM-DD format
   // Assuming the year is 2026 based on previous context.
   const INTERNSHIP_DATES = [

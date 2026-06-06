@@ -44,7 +44,8 @@ export default function RegistrationForm() {
     if (savedState) {
       try {
         const parsed = JSON.parse(savedState);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+         
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (parsed.step) setStep(parsed.step);
         if (parsed.registeredEmail) setRegisteredEmail(parsed.registeredEmail);
         if (parsed.finalTicketId) setFinalTicketId(parsed.finalTicketId);
@@ -79,8 +80,8 @@ export default function RegistrationForm() {
       if (!res.ok) throw new Error(data.error || 'Failed to send verification code');
       
       setEmailState('sent');
-    } catch (err: any) {
-      setError(err.message || 'Failed to send OTP.');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to send OTP.');
       setEmailState('idle');
     }
   };
@@ -104,8 +105,8 @@ export default function RegistrationForm() {
       if (!res.ok) throw new Error(data.error || 'Invalid OTP');
       
       setEmailState('verified');
-    } catch (err: any) {
-      setError(err.message || 'Invalid verification code.');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Invalid verification code.');
       setEmailState('sent');
     }
   };
@@ -210,8 +211,8 @@ export default function RegistrationForm() {
         finalTicketId: data.ticketId,
         formData: formData
       }));
-    } catch (err: any) {
-      setError(err.message || 'An unexpected error occurred.');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'An unexpected error occurred.');
     } finally {
       setLoading(false);
     }
@@ -296,8 +297,8 @@ export default function RegistrationForm() {
 
       setSuccess(true);
       localStorage.removeItem('aiWeekRegistrationState');
-    } catch (err: any) {
-      setError(err.message || 'Failed to submit payment proof.');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to submit payment proof.');
     } finally {
       setUploading(false);
     }
@@ -475,7 +476,7 @@ export default function RegistrationForm() {
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-navy dark:text-white mb-2 sm:mb-3 tracking-tight">Complete Payment</h2>
             <p className="text-slate-600 dark:text-slate-400 font-medium text-sm sm:text-base max-w-md mx-auto">
-              You can try to pay by <strong>clicking the QR code</strong> to open your payment app directly. If that doesn't work, take a screenshot and scan it in your UPI app.
+              You can try to pay by <strong>clicking the QR code</strong> to open your payment app directly. If that doesn&apos;t work, take a screenshot and scan it in your UPI app.
             </p>
           </div>
 
@@ -556,7 +557,7 @@ export default function RegistrationForm() {
               </p>
               <p className="mb-3 flex items-start">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mr-2 shrink-0 mt-0.5" />
-                <span><strong className="text-emerald-700 dark:text-emerald-400">QR Code Issues?</strong> If the QR code doesn't work, directly pay to the UPI ID shown above and upload the screenshot.</span>
+                <span><strong className="text-emerald-700 dark:text-emerald-400">QR Code Issues?</strong> If the QR code doesn&apos;t work, directly pay to the UPI ID shown above and upload the screenshot.</span>
               </p>
               <p className="flex items-start">
                 <Phone className="w-4 h-4 text-slate-500 dark:text-slate-400 mr-2 shrink-0 mt-0.5" />

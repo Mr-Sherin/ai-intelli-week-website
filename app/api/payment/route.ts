@@ -40,7 +40,7 @@ export async function POST(request: Request) {
     const { error: updateError } = await supabaseAdmin
       .from('registrations')
       .update({
-        payment_status: 'verified',
+        payment_status: 'pending',
         payment_screenshot_url: publicUrl,
         transaction_reference: cleanTxnRef,
         payment_submitted_at: new Date().toISOString(),
@@ -52,7 +52,8 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

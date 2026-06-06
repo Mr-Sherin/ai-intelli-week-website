@@ -44,7 +44,7 @@ export async function POST(request: Request) {
 
     // 3. Attendance tracking by Date
     const today = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
-    let currentAttendance: string[] = Array.isArray(registration.attendance) ? registration.attendance : [];
+    const currentAttendance: string[] = Array.isArray(registration.attendance) ? registration.attendance : [];
 
     if (currentAttendance.includes(today)) {
       return NextResponse.json({ 
@@ -72,7 +72,8 @@ export async function POST(request: Request) {
       attendee: registration
     });
 
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

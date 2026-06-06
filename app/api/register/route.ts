@@ -51,7 +51,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Please enter a valid, active email address.' }, { status: 400 });
     }
 
-    const dbPayload: any = {
+    const dbPayload: any /* eslint-disable-line @typescript-eslint/no-explicit-any */ = {
       full_name: payload.fullName,
       email: payload.email,
       phone: payload.phone,
@@ -104,7 +104,8 @@ export async function POST(request: Request) {
     if (insertError) throw new Error(insertError.message);
 
     return NextResponse.json({ success: true, ticketId });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

@@ -9,12 +9,56 @@ export default function QRScanner({ email, password }: { email: string, password
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [verifyStatus, setVerifyStatus] = useState<'idle' | 'loading' | 'success' | 'error' | 'already_scanned'>('idle');
   const [message, setMessage] = useState('');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [attendee, setAttendee] = useState<any>(null);
   const scannerRef = useRef<Html5Qrcode | null>(null);
+  const isVerifyingRef = useRef(false);
+
+  const onScanSuccess = async (decodedText: string) => {
+    if (isVerifyingRef.current) return;
+    
+    setScanResult(decodedText);
+    setVerifyStatus('loading');
+    isVerifyingRef.current = true;
+    
+    if (scannerRef.current && scannerRef.current.isScanning) {
+      scannerRef.current.pause();
+    }
+
+    try {
+      const res = await fetch('/api/admin/verify-ticket', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ticketId: decodedText, email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setVerifyStatus('error');
+        setMessage(data.error || 'Verification failed');
+        setAttendee(null);
+      } else {
+        if (data.success) {
+          setVerifyStatus('success');
+        } else {
+          setVerifyStatus('already_scanned');
+        }
+        setMessage(data.message);
+        setAttendee(data.attendee);
+      }
+    } catch (err: unknown) {
+      setVerifyStatus('error');
+      setMessage((err as Error).message);
+    } finally {
+      // Keep isVerifyingRef true until resetScanner is called
+    }
+  };
 
   useEffect(() => {
     let html5Qrcode: Html5Qrcode | null = null;
     let isMounted = true;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let startPromise: Promise<any> | null = null;
 
     const start = async () => {
@@ -61,45 +105,7 @@ export default function QRScanner({ email, password }: { email: string, password
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function onScanSuccess(decodedText: string) {
-    // Prevent multiple scans of the same code rapidly
-    if (verifyStatus === 'loading') return;
-    
-    setScanResult(decodedText);
-    setVerifyStatus('loading');
-    
-    // Pause scanner
-    if (scannerRef.current && scannerRef.current.isScanning) {
-      scannerRef.current.pause();
-    }
 
-    try {
-      const res = await fetch('/api/admin/verify-ticket', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ticketId: decodedText, email, password })
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setVerifyStatus('error');
-        setMessage(data.error || 'Verification failed');
-        setAttendee(null);
-      } else {
-        if (data.success) {
-          setVerifyStatus('success');
-        } else {
-          setVerifyStatus('already_scanned');
-        }
-        setMessage(data.message);
-        setAttendee(data.attendee);
-      }
-    } catch (err: any) {
-      setVerifyStatus('error');
-      setMessage(err.message);
-    }
-  };
 
 
 
@@ -108,6 +114,7 @@ export default function QRScanner({ email, password }: { email: string, password
     setVerifyStatus('idle');
     setMessage('');
     setAttendee(null);
+    isVerifyingRef.current = false;
     if (scannerRef.current) {
       scannerRef.current.resume();
     }

@@ -35,7 +35,8 @@ export async function POST(request: Request) {
 
     // We do NOT delete it here, because /api/register will delete it when the form is submitted.
     return NextResponse.json({ success: true, message: 'OTP is valid' });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message || 'Server error' }, { status: 500 });
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Server error';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

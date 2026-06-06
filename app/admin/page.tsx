@@ -12,7 +12,7 @@ export default function AdminDashboard() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [registrations, setRegistrations] = useState<any[]>([]);
+  const [registrations, setRegistrations] = useState<any[]> /* eslint-disable-line @typescript-eslint/no-explicit-any */([]);
   const [activeTab, setActiveTab] = useState<'registrations' | 'scanner' | 'attendance'>('registrations');
 
   const handleLogin = async (e?: React.FormEvent | React.MouseEvent) => {
@@ -35,11 +35,12 @@ export default function AdminDashboard() {
 
       setRegistrations(result.data || []);
       setIsLoggedIn(true);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       if (isLoggedIn) {
-        alert("Error refreshing data: " + err.message);
+        alert("Error refreshing data: " + errorMessage);
       } else {
-        setError(err.message);
+        setError(errorMessage);
       }
     } finally {
       setLoading(false);
@@ -127,7 +128,7 @@ export default function AdminDashboard() {
       reg.ieee_card_url || "N/A",
       reg.ticket_id,
       reg.payment_status,
-      reg.payment_submitted_at ? new Date(reg.payment_submitted_at).toLocaleString() : "N/A",
+      reg.payment_submitted_at ? new Date(reg.payment_submitted_at).toLocaleString() : (reg.transaction_reference ? new Date(reg.created_at).toLocaleString() : "N/A"),
       reg.transaction_reference || "N/A",
       reg.message || "N/A",
       reg.payment_screenshot_url || "N/A",
@@ -304,7 +305,7 @@ export default function AdminDashboard() {
                       </td>
                       <td className="p-4 whitespace-nowrap">
                         <div className="text-xs text-slate-700 dark:text-slate-300 font-bold">
-                          {reg.payment_submitted_at ? new Date(reg.payment_submitted_at).toLocaleString() : 'N/A'}
+                          {reg.payment_submitted_at ? new Date(reg.payment_submitted_at).toLocaleString() : (reg.transaction_reference ? new Date(reg.created_at).toLocaleString() : 'N/A')}
                         </div>
                       </td>
                       <td className="p-4">

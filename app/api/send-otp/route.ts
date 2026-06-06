@@ -82,8 +82,8 @@ export async function POST(request: Request) {
     await transporter.sendMail(mailOptions);
 
     return NextResponse.json({ success: true, message: 'OTP sent successfully' });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('OTP Error:', err);
-    return NextResponse.json({ error: err.message || 'Failed to send OTP' }, { status: 500 });
+    return NextResponse.json({ error: (err as Error).message || 'Failed to send OTP' }, { status: 500 });
   }
 }

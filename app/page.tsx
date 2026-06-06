@@ -210,10 +210,10 @@ export default function Home() {
                     Get ready for an intensive, hands-on journey into the next generation of software development and security. Our meticulously crafted week is designed to bridge the gap between academic theory and practical, industry-ready skills.
                   </p>
                   <p>
-                    You'll start by mastering the fundamentals of AI Pentesting and the revolutionary concept of Vibe Coding. As the week progresses, we'll dive deep into cutting-edge generative AI tools, exploring how to leverage them for maximum productivity and innovation.
+                    You&apos;ll start by mastering the fundamentals of AI Pentesting and the revolutionary concept of Vibe Coding. As the week progresses, we&apos;ll dive deep into cutting-edge generative AI tools, exploring how to leverage them for maximum productivity and innovation.
                   </p>
                   <p>
-                    Finally, you'll put your knowledge to the test by building a real-world project from home. This hands-on capstone ensures you walk away not just with theoretical knowledge, but with tangible experience you can showcase to future employers.
+                    Finally, you&apos;ll put your knowledge to the test by building a real-world project from home. This hands-on capstone ensures you walk away not just with theoretical knowledge, but with tangible experience you can showcase to future employers.
                   </p>
                 </motion.div>
               </div>
