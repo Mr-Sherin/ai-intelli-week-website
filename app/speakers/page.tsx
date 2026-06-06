@@ -3,7 +3,17 @@
 import { motion } from "framer-motion";
 import { Mic } from "lucide-react";
 
-const speakers = [
+type SpeakerType = {
+  name: string;
+  role: string;
+  image: string;
+  imagePosition?: string;
+  linkedin: string;
+  instagram: string;
+  bio?: string;
+};
+
+const speakers: SpeakerType[] = [
   {
     name: "Jobin Selvanose",
     role: "Software Engineer & Content Creator",
@@ -27,11 +37,20 @@ const speakers = [
     instagram: "https://www.instagram.com/arjungsanal?igsh=MTdkY3M5enJnbWJkNA=="
   },
   {
-    name: "Aadithyan",
-    role: "Speaker - Agentic AI: Building Agents From Scratch",
-    image: "https://ui-avatars.com/api/?name=Aadithyan&background=0D8ABC&color=fff&size=256",
-    linkedin: "",
+    name: "Adithyan L",
+    role: "Technical Manager at WagFu",
+    bio: "I have a strong focus on backend development, cybersecurity, and software architecture. I currently contribute as a technical lead, designing scalable systems, driving technical decisions, and building secure, production-oriented solutions while continuously exploring emerging technologies and advanced computing concepts.",
+    image: "/speaker-adithyan.jpg",
+    linkedin: "https://www.linkedin.com/in/adithyanaconitum",
     instagram: ""
+  },
+  {
+    name: "Alwi Sam",
+    role: "Managing Director, Foxtech Pvt Solutions",
+    bio: "Topic: AI Tools & Vibe Coding on Software Development. AI-Integrated Software Development: Building Intelligent Applications Beyond Traditional Coding",
+    image: "/speaker-alwi.jpg",
+    linkedin: "https://www.linkedin.com/in/alwi-sam-s-p-2a7017243?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+    instagram: "https://www.instagram.com/_alwi_sam_?igsh=MWkzODFhMmNpOTkxMw=="
   }
 ];
 
@@ -86,7 +105,10 @@ export default function SpeakersPage() {
               </div>
               
               <h3 className="text-2xl font-bold text-navy dark:text-white mb-2 relative z-10">{speaker.name}</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400 font-medium mb-8 flex-grow relative z-10 leading-relaxed">{speaker.role}</p>
+              <p className={`text-sm text-slate-600 dark:text-slate-400 font-medium ${speaker.bio ? 'mb-4' : 'mb-8 flex-grow'} relative z-10 leading-relaxed`}>{speaker.role}</p>
+              {speaker.bio && (
+                <p className="text-xs text-slate-500 dark:text-slate-400/80 mb-8 flex-grow relative z-10 leading-relaxed text-left">{speaker.bio}</p>
+              )}
               
               <div className="flex gap-3 mt-auto relative z-10">
                 {speaker.linkedin && (
