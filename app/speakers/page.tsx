@@ -40,6 +40,7 @@ const speakers: SpeakerType[] = [
     name: "Adithyan L",
     role: "Technical Manager at WagFu",
     image: "/speaker-adithyan.jpg",
+    imagePosition: "object-top",
     linkedin: "https://www.linkedin.com/in/adithyanaconitum",
     instagram: ""
   },
@@ -47,6 +48,7 @@ const speakers: SpeakerType[] = [
     name: "Alwi Sam",
     role: "Managing Director, Foxtech Pvt Solutions",
     image: "/speaker-alwi.jpg",
+    imagePosition: "object-top",
     linkedin: "https://www.linkedin.com/in/alwi-sam-s-p-2a7017243?utm_source=share_via&utm_content=profile&utm_medium=member_android",
     instagram: "https://www.instagram.com/_alwi_sam_?igsh=MWkzODFhMmNpOTkxMw=="
   }
