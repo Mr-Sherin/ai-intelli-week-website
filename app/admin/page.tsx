@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { Lock, Mail, Key, Download, RefreshCw, FileText, CheckCircle2, QrCode, Trash2, IdCard } from 'lucide-react';
+import { Lock, Mail, Key, Download, RefreshCw, FileText, CheckCircle2, QrCode, Trash2, IdCard, Undo2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import QRScanner from '@/components/QRScanner';
 import AttendanceTable from '@/components/AttendanceTable';
@@ -105,6 +105,10 @@ export default function AdminDashboard() {
       "Ticket Type",
       "IEEE Member ID",
       "IEEE Card URL",
+      "Is Mulearner",
+      "MuId",
+      "Karma Points",
+      "Level",
       "Ticket ID",
       "Payment Status",
       "Payment Submitted At",
@@ -123,9 +127,13 @@ export default function AdminDashboard() {
       reg.college,
       reg.department,
       reg.year_designation,
-      reg.is_ieee_member ? "IEEE Member" : "General",
+      reg.is_ieee_member ? "IEEE Member" : reg.is_mulearner ? "Mulearner" : "General",
       reg.ieee_member_id || "N/A",
       reg.ieee_card_url || "N/A",
+      reg.is_mulearner ? "Yes" : "No",
+      reg.muid || "N/A",
+      reg.karma_points || "N/A",
+      reg.level || "N/A",
       reg.ticket_id,
       reg.payment_status,
       reg.payment_submitted_at ? new Date(reg.payment_submitted_at).toLocaleString() : (reg.transaction_reference ? new Date(reg.created_at).toLocaleString() : "N/A"),
@@ -321,12 +329,18 @@ export default function AdminDashboard() {
                         <p className="text-xs text-slate-500 dark:text-slate-400">{reg.department}</p>
                       </td>
                       <td className="p-4">
-                        <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-bold ${reg.is_ieee_member ? 'bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}>
-                          {reg.is_ieee_member ? 'IEEE Member' : 'General'}
+                        <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-bold ${reg.is_ieee_member ? 'bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-400' : reg.is_mulearner ? 'bg-fuchsia-50 dark:bg-fuchsia-900/30 text-fuchsia-700 dark:text-fuchsia-400' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}>
+                          {reg.is_ieee_member ? 'IEEE Member' : reg.is_mulearner ? 'Mulearner' : 'General'}
                         </span>
                         <p className="text-xs font-mono text-slate-500 dark:text-slate-400 mt-1">{reg.ticket_id}</p>
                         {reg.ieee_member_id && (
                           <p className="text-xs font-bold text-cyan-600 dark:text-cyan-400 mt-1">ID: {reg.ieee_member_id}</p>
+                        )}
+                        {reg.is_mulearner && (
+                          <div className="mt-1">
+                            <p className="text-xs font-bold text-fuchsia-600 dark:text-fuchsia-400">MuId: {reg.muid}</p>
+                            <p className="text-[10px] text-slate-500 dark:text-slate-400">KP: {reg.karma_points} | Lvl: {reg.level}</p>
+                          </div>
                         )}
                       </td>
                       <td className="p-4">
@@ -340,12 +354,24 @@ export default function AdminDashboard() {
                               </div>
                             </div>
                           ) : reg.payment_status === 'verified' ? (
-                            <span className="flex items-center text-emerald-600 dark:text-emerald-400 text-xs font-bold bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded">
-                              <CheckCircle2 className="w-3 h-3 mr-1" />
-                              Verified
-                            </span>
+                            <div className="flex flex-col items-start gap-2">
+                              <span className="flex items-center text-emerald-600 dark:text-emerald-400 text-xs font-bold bg-emerald-50 dark:bg-emerald-900/30 px-2 py-1 rounded">
+                                <CheckCircle2 className="w-3 h-3 mr-1" />
+                                Verified
+                              </span>
+                              <button onClick={() => updateStatus(reg.id, 'pending')} className="flex items-center text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 px-2 py-1 rounded transition-colors font-bold">
+                                <Undo2 className="w-3 h-3 mr-1" />
+                                Undo
+                              </button>
+                            </div>
                           ) : (
-                            <span className="flex items-center text-red-600 dark:text-red-400 text-xs font-bold bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded">Rejected</span>
+                            <div className="flex flex-col items-start gap-2">
+                              <span className="flex items-center text-red-600 dark:text-red-400 text-xs font-bold bg-red-50 dark:bg-red-900/30 px-2 py-1 rounded">Rejected</span>
+                              <button onClick={() => updateStatus(reg.id, 'pending')} className="flex items-center text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 px-2 py-1 rounded transition-colors font-bold">
+                                <Undo2 className="w-3 h-3 mr-1" />
+                                Undo
+                              </button>
+                            </div>
                           )}
                         </div>
                         {reg.transaction_reference && (

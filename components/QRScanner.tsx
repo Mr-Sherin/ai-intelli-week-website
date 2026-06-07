@@ -197,7 +197,7 @@ export default function QRScanner({ email, password }: { email: string, password
                     </div>
                     <div>
                       <p className="text-xs text-slate-500 mb-1">Ticket Type</p>
-                      <p className="font-bold text-cyan-700">{attendee.is_ieee_member ? 'IEEE Member' : 'General'}</p>
+                      <p className="font-bold text-cyan-700">{attendee.is_ieee_member ? 'IEEE Member' : attendee.is_mulearner ? 'Mulearner' : 'General'}</p>
                     </div>
                     <div>
                       <p className="text-xs text-slate-500 mb-1">College</p>

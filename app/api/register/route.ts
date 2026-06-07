@@ -61,6 +61,10 @@ export async function POST(request: Request) {
       is_ieee_member: payload.isIeeeMember,
       ieee_member_id: payload.isIeeeMember ? payload.ieeeMemberId : null,
       ieee_card_url: payload.isIeeeMember ? payload.ieeeCardUrl : null,
+      is_mulearner: payload.isMulearner,
+      muid: payload.isMulearner ? payload.muId : null,
+      karma_points: payload.isMulearner ? payload.karmaPoints : null,
+      level: payload.isMulearner ? payload.level : null,
       preferred_session: 'Not Specified',
       message: payload.message,
       payment_status: 'pending'

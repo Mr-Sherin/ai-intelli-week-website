@@ -34,6 +34,10 @@ export default function RegistrationForm() {
     yearDesignation: '',
     isIeeeMember: false,
     ieeeMemberId: '',
+    isMulearner: false,
+    muId: '',
+    karmaPoints: '',
+    level: '',
     message: '',
     referredBy: ''
   });
@@ -183,6 +187,10 @@ export default function RegistrationForm() {
         isIeeeMember: formData.isIeeeMember,
         ieeeMemberId: formData.isIeeeMember ? formData.ieeeMemberId : null,
         ieeeCardUrl: formData.isIeeeMember ? ieeeCardUrl : null,
+        isMulearner: formData.isMulearner,
+        muId: formData.isMulearner ? formData.muId : null,
+        karmaPoints: formData.isMulearner ? formData.karmaPoints : null,
+        level: formData.isMulearner ? formData.level : null,
         message: formData.message,
         referredBy: formData.referredBy,
         otp: otp
@@ -390,7 +398,7 @@ export default function RegistrationForm() {
                   </div>
                   <div className="mb-4">
                     <p className="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1">Ticket Type</p>
-                    <p className="text-white text-sm font-medium truncate">{formData.isIeeeMember ? "IEEE Member" : "General Delegate"}</p>
+                    <p className="text-white text-sm font-medium truncate">{formData.isIeeeMember ? "IEEE Member" : formData.isMulearner ? "Mulearner" : "General Delegate"}</p>
                   </div>
                   <div>
                     <p className="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1">Ticket ID</p>
@@ -852,6 +860,78 @@ export default function RegistrationForm() {
                     <a href="/ieee-guide" className="text-sm font-bold text-cyan-600 hover:text-cyan-700 hover:underline transition-all">
                       Don&apos;t know how to get your Membership ID card?
                     </a>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className="flex items-center p-4 bg-white/40 dark:bg-slate-900/40 border border-white/60 dark:border-slate-800/60 rounded-2xl shadow-sm backdrop-blur-sm cursor-pointer group hover:bg-white/60 dark:hover:bg-slate-800/60 transition-colors" onClick={() => setFormData(prev => ({ ...prev, isMulearner: !prev.isMulearner }))}>
+            <div className={`w-6 h-6 flex items-center justify-center rounded border-2 transition-colors mr-3 ${formData.isMulearner ? 'bg-cyan-500 border-cyan-500' : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600'}`}>
+              {formData.isMulearner && <CheckCircle2 className="w-4 h-4 text-white" />}
+            </div>
+            <label className="text-sm sm:text-base text-slate-700 dark:text-slate-200 font-bold select-none cursor-pointer flex-1">
+              I am a Mulearner
+            </label>
+          </div>
+
+          <AnimatePresence>
+            {formData.isMulearner && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="space-y-4"
+              >
+                <div className={inputContainerClasses}>
+                  <label htmlFor="muId" className={labelClasses}>MuId *</label>
+                  <div className="relative">
+                    <div className={iconWrapperClasses}><User className="w-5 h-5" /></div>
+                    <input
+                      type="text"
+                      id="muId"
+                      name="muId"
+                      required={formData.isMulearner}
+                      value={formData.muId}
+                      onChange={handleChange}
+                      className={inputClasses}
+                      placeholder="Enter your MuId"
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className={inputContainerClasses}>
+                    <label htmlFor="karmaPoints" className={labelClasses}>Karma Points *</label>
+                    <div className="relative">
+                      <div className={iconWrapperClasses}><Briefcase className="w-5 h-5" /></div>
+                      <input
+                        type="number"
+                        id="karmaPoints"
+                        name="karmaPoints"
+                        required={formData.isMulearner}
+                        value={formData.karmaPoints}
+                        onChange={handleChange}
+                        className={inputClasses}
+                        placeholder="Enter Karma Points"
+                      />
+                    </div>
+                  </div>
+                  <div className={inputContainerClasses}>
+                    <label htmlFor="level" className={labelClasses}>Level *</label>
+                    <div className="relative">
+                      <div className={iconWrapperClasses}><GraduationCap className="w-5 h-5" /></div>
+                      <input
+                        type="text"
+                        id="level"
+                        name="level"
+                        required={formData.isMulearner}
+                        value={formData.level}
+                        onChange={handleChange}
+                        className={inputClasses}
+                        placeholder="Enter your Level"
+                      />
+                    </div>
                   </div>
                 </div>
               </motion.div>
