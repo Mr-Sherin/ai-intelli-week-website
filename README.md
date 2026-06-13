@@ -2,7 +2,7 @@
 
 ![AI Intelli Week]
 
-A modern, high-performance web application built for the **AI Intelli Week** internship and learning initiative. The event is organized by Lourdes Matha College of Science and Technology in collaboration with **IEEE**, **IEDC**, and **GDG**.
+A modern, high-performance web application built for the **AI Intelli Week** internship and learning initiative. The event is organized by Lourdes Matha College of Science and Technology in collaboration with **IEEE**, **IEDC**, **GDG**, **IIC**, and **µLearn**.
 
 ## 🚀 Key Features
 

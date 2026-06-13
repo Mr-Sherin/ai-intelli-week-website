@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { Lock, Mail, Key, Download, RefreshCw, FileText, CheckCircle2, QrCode, Trash2, IdCard, Undo2 } from 'lucide-react';
+import { Lock, Mail, Key, Download, RefreshCw, FileText, CheckCircle2, QrCode, Trash2, IdCard, Undo2, Search, ArrowDownUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import QRScanner from '@/components/QRScanner';
 import AttendanceTable from '@/components/AttendanceTable';
@@ -14,6 +14,30 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null);
   const [registrations, setRegistrations] = useState<any[]> /* eslint-disable-line @typescript-eslint/no-explicit-any */([]);
   const [activeTab, setActiveTab] = useState<'registrations' | 'scanner' | 'attendance'>('registrations');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'recent' | 'alphabetical'>('recent');
+
+  const filteredAndSortedRegistrations = registrations
+    .filter(reg => {
+      if (!searchQuery) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        reg.full_name?.toLowerCase().includes(q) ||
+        reg.email?.toLowerCase().includes(q) ||
+        reg.phone?.toLowerCase().includes(q) ||
+        reg.ticket_id?.toLowerCase().includes(q) ||
+        reg.college?.toLowerCase().includes(q)
+      );
+    })
+    .sort((a, b) => {
+      if (sortBy === 'alphabetical') {
+        return (a.full_name || '').localeCompare(b.full_name || '');
+      } else {
+        const timeA = new Date(a.payment_submitted_at || a.created_at).getTime();
+        const timeB = new Date(b.payment_submitted_at || b.created_at).getTime();
+        return timeB - timeA;
+      }
+    });
 
   const handleLogin = async (e?: React.FormEvent | React.MouseEvent) => {
     if (e) e.preventDefault();
@@ -267,9 +291,38 @@ export default function AdminDashboard() {
           <AttendanceTable registrations={registrations} />
         ) : (
           <>
-            <div className="flex justify-end mb-4 gap-3">
-              <button
-                onClick={() => handleLogin()}
+            <div className="flex flex-col md:flex-row justify-between mb-4 gap-3">
+              <div className="flex flex-col sm:flex-row flex-1 gap-3">
+                <div className="relative flex-1 max-w-md">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <Search className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search by name, email, phone, ticket ID..."
+                    className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all text-slate-700 dark:text-slate-300 placeholder-slate-400 text-sm font-medium shadow-sm"
+                  />
+                </div>
+                <div className="relative">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as 'recent' | 'alphabetical')}
+                    className="appearance-none pl-10 pr-8 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all text-slate-700 dark:text-slate-300 text-sm font-medium cursor-pointer shadow-sm w-full sm:w-auto"
+                  >
+                    <option value="recent">Recent Payments</option>
+                    <option value="alphabetical">Alphabetical</option>
+                  </select>
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                    <ArrowDownUp className="w-4 h-4" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-3 justify-start sm:justify-end">
+                <button
+                  onClick={() => handleLogin()}
                 disabled={loading}
                 className="flex items-center px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm disabled:opacity-50"
               >
@@ -283,6 +336,7 @@ export default function AdminDashboard() {
                 <Download className="w-4 h-4 mr-2" />
                 Export CSV
               </button>
+            </div>
             </div>
 
             <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
@@ -301,12 +355,12 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {registrations.length === 0 ? (
+                {filteredAndSortedRegistrations.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-slate-500 dark:text-slate-400">No registrations found.</td>
+                    <td colSpan={8} className="p-8 text-center text-slate-500 dark:text-slate-400">No registrations found matching your criteria.</td>
                   </tr>
                 ) : (
-                  registrations.map((reg, idx) => (
+                  filteredAndSortedRegistrations.map((reg, idx) => (
                     <tr key={reg.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors border-b border-slate-100 dark:border-slate-800/50 last:border-0">
                       <td className="p-4 text-sm font-bold text-slate-700 dark:text-slate-300 text-center">
                         {idx + 1}

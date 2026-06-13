@@ -26,13 +26,14 @@ export default function Home() {
   ];
 
   const schedule = [
-    { day: 'June 15', title: 'AI Pentesting & Vibe Coding Basics' },
-    { day: 'June 16', title: 'Vibe Coding Anti Gravity' },
-    { day: 'June 17', title: 'AI Tools Part 1' },
-    { day: 'June 18', title: 'AI Tools Part 2' },
-    { day: 'June 19', title: 'AI Tools Part 3' },
-    { day: 'June 20 & 21', title: 'Project Completion (From Home)' },
-    { day: 'June 22', title: 'Final Review' },
+    { day: 'June 13', title: 'Pre-event' },
+    { day: 'June 15', title: 'AI Pentesting & Vibe Coding Basics (Abimel S B Kulumala)' },
+    { day: 'June 16', title: 'Anti Gravity & Vibe Coding Full Stack (Jobin Selvanose)' },
+    { day: 'June 17', title: 'AI Building from Scratch (Arjun G S)' },
+    { day: 'June 18', title: 'AI Integrated Software Development (Alwi Sam)' },
+    { day: 'June 19', title: 'Agentic AI (Adithyan L)' },
+    { day: 'June 22 - 25', title: 'Project Completion' },
+    { day: 'June 26', title: 'Final Presentation' },
   ];
 
   return (

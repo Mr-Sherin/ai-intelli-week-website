@@ -4,12 +4,17 @@ export default function AttendanceTable({ registrations }: { registrations: any 
   // The specific dates for the internship in YYYY-MM-DD format
   // Assuming the year is 2026 based on previous context.
   const INTERNSHIP_DATES = [
+    { label: 'Jun 13', value: '2026-06-13' },
     { label: 'Jun 15', value: '2026-06-15' },
     { label: 'Jun 16', value: '2026-06-16' },
     { label: 'Jun 17', value: '2026-06-17' },
     { label: 'Jun 18', value: '2026-06-18' },
     { label: 'Jun 19', value: '2026-06-19' },
-    { label: 'Jun 22', value: '2026-06-22' }
+    { label: 'Jun 22', value: '2026-06-22' },
+    { label: 'Jun 23', value: '2026-06-23' },
+    { label: 'Jun 24', value: '2026-06-24' },
+    { label: 'Jun 25', value: '2026-06-25' },
+    { label: 'Jun 26', value: '2026-06-26' }
   ];
 
   // We only want to show attendance for verified attendees (those who actually got tickets)
@@ -19,7 +24,7 @@ export default function AttendanceTable({ registrations }: { registrations: any 
     <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
       <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
         <h2 className="text-xl font-bold text-slate-900 dark:text-white">Attendance Tracker</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Track daily check-ins for the 6-day internship program.</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Track daily check-ins for the internship program.</p>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
