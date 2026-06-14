@@ -226,8 +226,12 @@ export default function RegistrationForm() {
         finalTicketId: data.ticketId,
         formData: formData
       }));
-    } catch (err: unknown) {
-      setError((err as Error).message || 'An unexpected error occurred.');
+    } catch (err: any) {
+      let errorMessage = err?.message || (typeof err === 'string' ? err : JSON.stringify(err)) || 'An unexpected error occurred.';
+      if (errorMessage.toLowerCase().includes('file could not be read') || errorMessage.includes('code=0')) {
+        errorMessage = 'Your browser could not read the selected image file. Please re-select the image or take a new photo and try again.';
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -324,7 +328,12 @@ export default function RegistrationForm() {
       localStorage.removeItem('aiWeekRegistrationState');
     } catch (err: any) {
       console.error('Payment submission error:', err);
-      const errorMessage = err?.message || (typeof err === 'string' ? err : JSON.stringify(err)) || 'Failed to submit payment proof.';
+      let errorMessage = err?.message || (typeof err === 'string' ? err : JSON.stringify(err)) || 'Failed to submit payment proof.';
+      
+      if (errorMessage.toLowerCase().includes('file could not be read') || errorMessage.includes('code=0')) {
+        errorMessage = 'Your browser could not read the selected image file. Please re-select the screenshot or take a new one and try again.';
+      }
+      
       setError(errorMessage);
     } finally {
       setUploading(false);
