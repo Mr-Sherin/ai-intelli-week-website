@@ -302,7 +302,8 @@ export default function RegistrationForm() {
         .upload(filePath, file);
 
       if (uploadError) {
-        throw new Error('Failed to upload screenshot. Make sure the bucket exists and permissions are set.');
+        console.error("Supabase storage error:", uploadError);
+        throw new Error(`Failed to upload screenshot: ${uploadError.message || 'Make sure the bucket exists and permissions are set.'}`);
       }
 
       const { data: { publicUrl } } = supabase.storage
