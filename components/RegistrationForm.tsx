@@ -133,27 +133,34 @@ export default function RegistrationForm() {
         setLoadingMessage('Scanning IEEE Card...');
         
         // --- AI OCR Authenticity Check for IEEE Card ---
-        const { data: { text } } = await Tesseract.recognize(ieeeCardFile, 'eng');
-        const lowerText = text.toLowerCase();
-        
-        // Keywords expected on a standard IEEE membership card
-        const expectedPhrases = [
-          'ieee',
-          'membership',
-          'thank you',
-          'member',
-          'contact center',
-          'park avenue',
-          'ieee.org',
-          'section'
-        ];
-        
-        // Count how many of these structural phrases appear in the scan
-        const matchCount = expectedPhrases.filter(phrase => lowerText.includes(phrase)).length;
-        
-        // Require at least 3 matching phrases to prove it's an IEEE card layout
-        if (matchCount < 3) {
-          throw new Error(`AI Verification Failed: The uploaded document does not appear to be a valid IEEE Membership Card. Please ensure you upload a clear screenshot of the card as shown in the guide.`);
+        try {
+          const { data: { text } } = await Tesseract.recognize(ieeeCardFile, 'eng');
+          const lowerText = text.toLowerCase();
+          
+          // Keywords expected on a standard IEEE membership card
+          const expectedPhrases = [
+            'ieee',
+            'membership',
+            'thank you',
+            'member',
+            'contact center',
+            'park avenue',
+            'ieee.org',
+            'section'
+          ];
+          
+          // Count how many of these structural phrases appear in the scan
+          const matchCount = expectedPhrases.filter(phrase => lowerText.includes(phrase)).length;
+          
+          // Require at least 3 matching phrases to prove it's an IEEE card layout
+          if (matchCount < 3) {
+            throw new Error(`AI Verification Failed: The uploaded document does not appear to be a valid IEEE Membership Card. Please ensure you upload a clear screenshot of the card as shown in the guide.`);
+          }
+        } catch (ocrError: any) {
+          if (ocrError && ocrError.message && ocrError.message.includes('AI Verification Failed')) {
+            throw ocrError;
+          }
+          console.warn('OCR Engine failed to process the IEEE card. Proceeding without OCR validation:', ocrError);
         }
         // --- End AI OCR Check ---
 
@@ -251,24 +258,34 @@ export default function RegistrationForm() {
 
     try {
       // --- AI OCR Authenticity Check ---
-      const { data: { text } } = await Tesseract.recognize(file, 'eng');
-      const cleanText = text.replace(/[\s\-_,]/g, '').toLowerCase();
-      const cleanTxnRef = txnRef.replace(/[\s\-_]/g, '').toLowerCase();
-      
-      const expectedAmount = formData.isIeeeMember ? '549' : '799';
-      const expectedName = 'anusa';
-      
-      const hasName = cleanText.includes(expectedName);
-      const hasAmount = cleanText.includes(expectedAmount);
-      const hasTime = text.includes(':');
-      const hasTxnId = cleanText.includes(cleanTxnRef);
-      
-      // Calculate how many checks passed
-      const score = [hasName, hasAmount, hasTime, hasTxnId].filter(Boolean).length;
-      
-      // Require at least 3 out of 4 checks to pass (handles slight blurriness)
-      if (score < 3) {
-        throw new Error(`AI Verification Failed: Could not verify enough details in the screenshot. Make sure the Name, Amount, Time, and Transaction ID are clearly visible.`);
+      try {
+        const { data: { text } } = await Tesseract.recognize(file, 'eng');
+        const cleanText = text.replace(/[\s\-_,]/g, '').toLowerCase();
+        const cleanTxnRef = txnRef.replace(/[\s\-_]/g, '').toLowerCase();
+        
+        const expectedAmount = formData.isIeeeMember ? '549' : '799';
+        const expectedName = 'anusa';
+        
+        const hasName = cleanText.includes(expectedName);
+        const hasAmount = cleanText.includes(expectedAmount);
+        const hasTime = text.includes(':');
+        const hasTxnId = cleanText.includes(cleanTxnRef);
+        
+        // Calculate how many checks passed
+        const score = [hasName, hasAmount, hasTime, hasTxnId].filter(Boolean).length;
+        
+        // Require at least 3 out of 4 checks to pass (handles slight blurriness)
+        if (score < 3) {
+          throw new Error(`AI Verification Failed: Could not verify enough details in the screenshot. Make sure the Name, Amount, Time, and Transaction ID are clearly visible.`);
+        }
+      } catch (ocrError: any) {
+        // If it's our specific validation error, rethrow it
+        if (ocrError && ocrError.message && ocrError.message.includes('AI Verification Failed')) {
+          throw ocrError;
+        }
+        // Otherwise, it might be Tesseract failing to load/process due to network or browser issues.
+        // We log the error but allow the submission to continue so the user is not blocked.
+        console.warn('OCR Engine failed to process the image. Proceeding without OCR validation:', ocrError);
       }
       // --- End AI OCR Check ---
 
@@ -305,8 +322,10 @@ export default function RegistrationForm() {
 
       setSuccess(true);
       localStorage.removeItem('aiWeekRegistrationState');
-    } catch (err: unknown) {
-      setError((err as Error).message || 'Failed to submit payment proof.');
+    } catch (err: any) {
+      console.error('Payment submission error:', err);
+      const errorMessage = err?.message || (typeof err === 'string' ? err : JSON.stringify(err)) || 'Failed to submit payment proof.';
+      setError(errorMessage);
     } finally {
       setUploading(false);
     }
