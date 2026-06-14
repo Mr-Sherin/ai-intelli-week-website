@@ -2,9 +2,11 @@
 
 import { useState } from 'react';
 import { Lock, Mail, Key, Download, RefreshCw, FileText, CheckCircle2, QrCode, Trash2, IdCard, Undo2, Search, ArrowDownUp } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import QRScanner from '@/components/QRScanner';
 import AttendanceTable from '@/components/AttendanceTable';
+import QRCode from 'react-qr-code';
+import { X, Ticket } from 'lucide-react';
 
 export default function AdminDashboard() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,6 +18,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'registrations' | 'scanner' | 'attendance'>('registrations');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'alphabetical'>('recent');
+  const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
 
   const filteredAndSortedRegistrations = registrations
     .filter(reg => {
@@ -452,6 +455,9 @@ export default function AdminDashboard() {
                               <QrCode className="w-4 h-4" />
                             </a>
                           )}
+                          <button onClick={() => setSelectedTicket(reg)} className="p-1.5 bg-fuchsia-50 dark:bg-fuchsia-900/30 hover:bg-fuchsia-100 dark:hover:bg-fuchsia-800/50 text-fuchsia-600 dark:text-fuchsia-400 rounded transition-colors" title="View Full Ticket">
+                            <Ticket className="w-4 h-4" />
+                          </button>
                           <button onClick={() => deleteRegistration(reg.id)} className="p-1.5 bg-red-50 dark:bg-red-900/30 hover:bg-red-100 dark:hover:bg-red-800/50 text-red-600 dark:text-red-400 rounded transition-colors ml-auto" title="Delete Registration">
                             <Trash2 className="w-4 h-4" />
                           </button>
@@ -466,6 +472,84 @@ export default function AdminDashboard() {
         </div>
         </>
         )}
+
+        <AnimatePresence>
+          {selectedTicket && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm"
+              onClick={() => setSelectedTicket(null)}
+            >
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="relative bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 max-w-sm w-full shadow-2xl border border-slate-200 dark:border-slate-800"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={() => setSelectedTicket(null)}
+                  className="absolute top-4 right-4 p-2 bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white rounded-full transition-colors z-20"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                
+                <div className="flex flex-col items-center w-full">
+                  <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Official Pass</p>
+                  
+                  <div className="w-full bg-slate-900 rounded-3xl overflow-hidden shadow-2xl relative border border-slate-700/50 flex flex-col text-left">
+                    <div className="p-6 pb-8 relative overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 blur-[30px] rounded-full pointer-events-none"></div>
+                      <div className="absolute bottom-0 left-0 w-32 h-32 bg-fuchsia-500/10 blur-[30px] rounded-full pointer-events-none"></div>
+                      
+                      <h3 className="text-2xl font-black text-white mb-1 tracking-tight">AI Intelli Week 2026</h3>
+                      <p className="text-cyan-400 text-sm font-bold uppercase tracking-wider mb-6">Premium Access</p>
+                      
+                      <div className="space-y-1">
+                        <p className="text-slate-400 text-xs uppercase font-bold tracking-wider">Date</p>
+                        <p className="text-white text-sm font-medium">June 15 - 22, 2026</p>
+                      </div>
+                    </div>
+
+                    <div className="relative flex items-center justify-between w-full h-4 bg-slate-800">
+                      <div className="absolute -left-3 w-6 h-6 bg-white rounded-full border-r border-slate-200"></div>
+                      <div className="w-full border-t-2 border-dashed border-slate-600/50 mx-4"></div>
+                      <div className="absolute -right-3 w-6 h-6 bg-white rounded-full border-l border-slate-200"></div>
+                    </div>
+
+                    <div className="p-6 pt-8 bg-slate-800 flex justify-between items-end">
+                      <div className="flex-1 pr-4 min-w-0">
+                        <div className="mb-4">
+                          <p className="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1">Attendee</p>
+                          <p className="text-white text-lg font-bold leading-tight truncate" title={selectedTicket.full_name || "Guest"}>{selectedTicket.full_name || "Guest"}</p>
+                        </div>
+                        <div className="mb-4">
+                          <p className="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1">Ticket Type</p>
+                          <p className="text-white text-sm font-medium truncate">{selectedTicket.is_ieee_member ? "IEEE Member" : selectedTicket.is_mulearner ? "Mulearner" : "General Delegate"}</p>
+                        </div>
+                        <div>
+                          <p className="text-slate-400 text-xs uppercase font-bold tracking-wider mb-1">Ticket ID</p>
+                          <p className="text-cyan-400 font-mono text-sm tracking-wider">{selectedTicket.ticket_id}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white p-2 rounded-xl shrink-0 shadow-lg">
+                        <QRCode 
+                          value={selectedTicket.ticket_id || 'AI-WEEK-TICKET'} 
+                          size={80} 
+                          style={{ height: "auto", maxWidth: "100%", width: "100%" }} 
+                          viewBox={`0 0 80 80`} 
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
