@@ -450,11 +450,7 @@ export default function AdminDashboard() {
                               <IdCard className="w-4 h-4" />
                             </a>
                           )}
-                          {reg.ticket_qr_url && (
-                            <a href={reg.ticket_qr_url} target="_blank" rel="noreferrer" className="p-1.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded transition-colors" title="View Ticket QR">
-                              <QrCode className="w-4 h-4" />
-                            </a>
-                          )}
+                          {/* Removed standalone ticket QR link as per request */}
                           <button onClick={() => setSelectedTicket(reg)} className="p-1.5 bg-fuchsia-50 dark:bg-fuchsia-900/30 hover:bg-fuchsia-100 dark:hover:bg-fuchsia-800/50 text-fuchsia-600 dark:text-fuchsia-400 rounded transition-colors" title="View Full Ticket">
                             <Ticket className="w-4 h-4" />
                           </button>
