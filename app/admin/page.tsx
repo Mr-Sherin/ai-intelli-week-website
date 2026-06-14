@@ -291,7 +291,14 @@ export default function AdminDashboard() {
         {activeTab === 'scanner' ? (
           <QRScanner email={email} password={password} />
         ) : activeTab === 'attendance' ? (
-          <AttendanceTable registrations={registrations} />
+          <AttendanceTable 
+            registrations={registrations} 
+            email={email} 
+            password={password}
+            onAttendanceChange={(id, newAttendance) => {
+              setRegistrations(prev => prev.map(reg => reg.id === id ? { ...reg, attendance: newAttendance } : reg));
+            }}
+          />
         ) : (
           <>
             <div className="flex flex-col md:flex-row justify-between mb-4 gap-3">

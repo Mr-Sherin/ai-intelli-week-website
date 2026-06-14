@@ -1,6 +1,17 @@
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { useState } from 'react';
+import { CheckCircle2, XCircle, Loader2 } from 'lucide-react';
 
-export default function AttendanceTable({ registrations }: { registrations: any /* eslint-disable-line @typescript-eslint/no-explicit-any */[] /* eslint-disable-line @typescript-eslint/no-explicit-any */ }) {
+export default function AttendanceTable({ 
+  registrations, 
+  email, 
+  password, 
+  onAttendanceChange 
+}: { 
+  registrations: any[]; 
+  email?: string; 
+  password?: string; 
+  onAttendanceChange?: (id: string, newAttendance: string[]) => void;
+}) {
   // The specific dates for the internship in YYYY-MM-DD format
   // Assuming the year is 2026 based on previous context.
   const INTERNSHIP_DATES = [
@@ -18,7 +29,37 @@ export default function AttendanceTable({ registrations }: { registrations: any 
   ];
 
   // We only want to show attendance for verified attendees (those who actually got tickets)
-  const verifiedRegistrations = registrations.filter(r => r.payment_status === 'verified');
+  const verifiedRegistrations = [...registrations]
+    .filter(r => r.payment_status === 'verified')
+    .sort((a, b) => (a.full_name || '').localeCompare(b.full_name || ''));
+
+  const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
+
+  const toggleAttendance = async (regId: string, dateValue: string) => {
+    if (!email || !password || !onAttendanceChange) return;
+
+    const key = `${regId}-${dateValue}`;
+    setLoadingMap(prev => ({ ...prev, [key]: true }));
+
+    try {
+      const res = await fetch('/api/admin/toggle-attendance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: regId, date: dateValue, email, password })
+      });
+
+      const result = await res.json();
+      if (!res.ok) {
+        throw new Error(result.error || 'Failed to toggle attendance');
+      }
+
+      onAttendanceChange(regId, result.attendance);
+    } catch (err: any) {
+      alert("Error: " + err.message);
+    } finally {
+      setLoadingMap(prev => ({ ...prev, [key]: false }));
+    }
+  };
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
@@ -69,18 +110,30 @@ export default function AttendanceTable({ registrations }: { registrations: any 
 
                     {INTERNSHIP_DATES.map((date) => {
                       const isPresent = attendanceLog.includes(date.value);
+                      const key = `${reg.id}-${date.value}`;
+                      const isLoading = loadingMap[key];
+                      
                       return (
-                        <td key={date.value} className="p-4 text-center border-r border-slate-100 dark:border-slate-800 last:border-r-0">
+                        <td key={date.value} className="p-2 sm:p-4 text-center border-r border-slate-100 dark:border-slate-800 last:border-r-0">
                           <div className="flex justify-center">
-                            {isPresent ? (
-                              <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400" title="Present">
+                            <button
+                              onClick={() => toggleAttendance(reg.id, date.value)}
+                              disabled={isLoading}
+                              className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors shadow-sm disabled:opacity-50
+                                ${isPresent 
+                                  ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 hover:bg-red-50 hover:text-red-500 hover:dark:bg-red-900/30 hover:dark:text-red-400' 
+                                  : 'bg-slate-100 dark:bg-slate-800 text-slate-300 dark:text-slate-600 hover:bg-emerald-50 hover:text-emerald-500 hover:dark:bg-emerald-900/30 hover:dark:text-emerald-400'
+                                }`}
+                              title={isPresent ? "Mark Absent" : "Mark Present"}
+                            >
+                              {isLoading ? (
+                                <Loader2 className="w-4 h-4 animate-spin text-cyan-500" />
+                              ) : isPresent ? (
                                 <CheckCircle2 className="w-5 h-5" />
-                              </div>
-                            ) : (
-                              <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-300 dark:text-slate-600" title="Absent">
+                              ) : (
                                 <XCircle className="w-5 h-5" />
-                              </div>
-                            )}
+                              )}
+                            </button>
                           </div>
                         </td>
                       );
