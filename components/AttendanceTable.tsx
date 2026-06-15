@@ -5,7 +5,9 @@ export default function AttendanceTable({
   registrations, 
   email, 
   password, 
-  onAttendanceChange 
+  onAttendanceChange,
+  onRefresh,
+  isRefreshing
 }: { 
   registrations: any[]; 
   email?: string; 
