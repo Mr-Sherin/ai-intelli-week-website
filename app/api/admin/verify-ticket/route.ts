@@ -43,7 +43,30 @@ export async function POST(request: Request) {
     }
 
     // 3. Attendance tracking by Date
-    const today = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
+    // Get the current date in IST (Asia/Kolkata) since the event is in India
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('en-CA', { 
+      timeZone: 'Asia/Kolkata', 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    });
+    // en-CA format is YYYY-MM-DD
+    const today = formatter.format(now);
+
+    const VALID_EVENT_DATES = [
+      '2026-06-15', '2026-06-16', '2026-06-17', '2026-06-18', '2026-06-19',
+      '2026-06-22', '2026-06-23', '2026-06-24', '2026-06-25', '2026-06-26'
+    ];
+
+    if (!VALID_EVENT_DATES.includes(today)) {
+      return NextResponse.json({ 
+        success: false, 
+        message: `Check-in not allowed. Today (${today}) is not a scheduled event date.`, 
+        attendee: registration 
+      });
+    }
+
     const currentAttendance: string[] = Array.isArray(registration.attendance) ? registration.attendance : [];
 
     if (currentAttendance.includes(today)) {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { CheckCircle2, XCircle, Loader2, RefreshCw, Search } from 'lucide-react';
 
 export default function AttendanceTable({ 
   registrations, 
@@ -11,11 +11,12 @@ export default function AttendanceTable({
   email?: string; 
   password?: string; 
   onAttendanceChange?: (id: string, newAttendance: string[]) => void;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
 }) {
   // The specific dates for the internship in YYYY-MM-DD format
   // Assuming the year is 2026 based on previous context.
   const INTERNSHIP_DATES = [
-    { label: 'Jun 13', value: '2026-06-13' },
     { label: 'Jun 15', value: '2026-06-15' },
     { label: 'Jun 16', value: '2026-06-16' },
     { label: 'Jun 17', value: '2026-06-17' },
@@ -29,8 +30,19 @@ export default function AttendanceTable({
   ];
 
   // We only want to show attendance for verified attendees (those who actually got tickets)
+  const [searchQuery, setSearchQuery] = useState('');
   const verifiedRegistrations = [...registrations]
     .filter(r => r.payment_status === 'verified')
+    .filter(r => {
+      if (!searchQuery) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        (r.full_name?.toLowerCase() || '').includes(q) || 
+        (r.email?.toLowerCase() || '').includes(q) || 
+        (r.college?.toLowerCase() || '').includes(q) || 
+        (r.ticket_id?.toLowerCase() || '').includes(q)
+      );
+    })
     .sort((a, b) => (a.full_name || '').localeCompare(b.full_name || ''));
 
   const [loadingMap, setLoadingMap] = useState<Record<string, boolean>>({});
@@ -63,9 +75,36 @@ export default function AttendanceTable({
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
-      <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Attendance Tracker</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Track daily check-ins for the internship program.</p>
+      <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Attendance Tracker</h2>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Track daily check-ins for the internship program.</p>
+        </div>
+        
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="relative w-full md:w-64">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <Search className="w-4 h-4" />
+            </div>
+            <input
+              type="text"
+              placeholder="Search attendees..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500/50 text-slate-700 dark:text-slate-300 placeholder-slate-400 shadow-sm transition-all"
+            />
+          </div>
+          {onRefresh && (
+            <button
+              onClick={onRefresh}
+              disabled={isRefreshing}
+              className="flex items-center px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm disabled:opacity-50 shrink-0"
+            >
+              <RefreshCw className={`w-4 h-4 md:mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <span className="hidden md:inline">{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+            </button>
+          )}
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from 'react';
-import { Lock, Mail, Key, Download, RefreshCw, FileText, CheckCircle2, QrCode, Trash2, IdCard, Undo2, Search, ArrowDownUp } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Lock, Mail, Key, Download, RefreshCw, FileText, CheckCircle2, QrCode, Trash2, IdCard, Undo2, Search, ArrowDownUp, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import QRScanner from '@/components/QRScanner';
 import AttendanceTable from '@/components/AttendanceTable';
@@ -19,6 +19,35 @@ export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'alphabetical'>('recent');
   const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
+  const [isSendingTickets, setIsSendingTickets] = useState(false);
+
+  // Live auto-polling every 5 seconds when logged in
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    
+    let isMounted = true;
+    const fetchLiveUpdates = async () => {
+      try {
+        const res = await fetch('/api/admin/data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const result = await res.json();
+        if (res.ok && isMounted) {
+          setRegistrations(result.data || []);
+        }
+      } catch (err) {
+        // Silent fail for polling
+      }
+    };
+
+    const intervalId = setInterval(fetchLiveUpdates, 5000);
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
+  }, [isLoggedIn, email, password]);
 
   const filteredAndSortedRegistrations = registrations
     .filter(reg => {
@@ -185,6 +214,33 @@ export default function AdminDashboard() {
     document.body.removeChild(link);
   };
 
+  const sendTickets = async () => {
+    const unsentCount = registrations.filter(r => r.payment_status === 'verified' && !r.ticket_sent).length;
+    if (unsentCount === 0) {
+      alert('All verified attendees have already received their tickets!');
+      return;
+    }
+    if (!window.confirm(`Send tickets to ${unsentCount} verified attendee(s) who haven't received one yet? This cannot be undone.`)) return;
+
+    setIsSendingTickets(true);
+    try {
+      const res = await fetch('/api/admin/send-bulk-tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Failed to send tickets');
+      alert(`✅ ${result.message}`);
+      // Refresh to update ticket_sent flags
+      handleLogin();
+    } catch (err) {
+      alert('❌ Error: ' + (err as Error).message);
+    } finally {
+      setIsSendingTickets(false);
+    }
+  };
+
   if (!isLoggedIn) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
@@ -298,6 +354,8 @@ export default function AdminDashboard() {
             onAttendanceChange={(id, newAttendance) => {
               setRegistrations(prev => prev.map(reg => reg.id === id ? { ...reg, attendance: newAttendance } : reg));
             }}
+            onRefresh={handleLogin}
+            isRefreshing={loading}
           />
         ) : (
           <>
@@ -345,6 +403,14 @@ export default function AdminDashboard() {
               >
                 <Download className="w-4 h-4 mr-2" />
                 Export CSV
+              </button>
+              <button
+                onClick={sendTickets}
+                disabled={isSendingTickets}
+                className="flex items-center px-5 py-2 bg-gradient-to-r from-cyan-500 to-fuchsia-600 text-white rounded-xl font-bold hover:opacity-90 transition-all shadow-lg shadow-cyan-500/20 disabled:opacity-50 disabled:pointer-events-none"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                {isSendingTickets ? 'Sending...' : `Send Tickets (${registrations.filter(r => r.payment_status === 'verified' && !r.ticket_sent).length} unsent)`}
               </button>
             </div>
             </div>
