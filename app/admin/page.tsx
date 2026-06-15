@@ -705,12 +705,20 @@ function ReviewsPanel({
   // Group reviews by session_date
   const grouped: Record<string, any[]> = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
   for (const r of reviews) {
-    const key = r.session_date?.slice(0, 10) ?? 'unknown';
+    // session_date may come as "2026-06-15" (DATE) or a full ISO timestamp;
+    // always extract the YYYY-MM-DD portion for grouping
+    const rawDate: string = r.session_date ?? '';
+    const key = rawDate.length >= 10 ? rawDate.slice(0, 10) : 'unknown';
     if (!grouped[key]) grouped[key] = [];
     grouped[key].push(r);
   }
 
   const orderedDates = Object.keys(SESSION_META).filter((d) => grouped[d]);
+  // Any reviews whose session_date didn't match a known SESSION_META key
+  const ungroupedReviews = Object.entries(grouped)
+    .filter(([key]) => !SESSION_META[key] && key !== 'unknown')
+    .flatMap(([, rs]) => rs);
+  const unknownReviews = grouped['unknown'] ?? [];
 
   // Overall stats
   const totalReviews = reviews.length;
@@ -852,7 +860,7 @@ function ReviewsPanel({
                     <p className="text-sm text-slate-400 dark:text-slate-500">No written comments for this session yet.</p>
                   </div>
                 ) : (
-                  <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+                  <div className="space-y-3 pr-1">
                     {withText.map((r: any, i: number) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
                       <div
                         key={i}
@@ -874,6 +882,30 @@ function ReviewsPanel({
           </motion.div>
         );
       })}
+
+      {/* Fallback: reviews whose session_date didn't match any SESSION_META key */}
+      {[...ungroupedReviews, ...unknownReviews].length > 0 && (
+        <div className="bg-amber-50 dark:bg-amber-900/20 rounded-3xl border border-amber-200 dark:border-amber-700/40 overflow-hidden shadow-sm">
+          <div className="px-6 py-5 border-b border-amber-100 dark:border-amber-800/40">
+            <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">⚠ Unmatched Reviews</h2>
+            <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
+              These reviews exist in the database but their <code className="font-mono bg-amber-100 dark:bg-amber-900/40 px-1 rounded">session_date</code> did not match a known session day.{' '}
+              Raw dates received: <span className="font-mono">{[...new Set([...ungroupedReviews, ...unknownReviews].map((r: any) => r.session_date ?? '(null)'))].join(', ')}</span>{/* eslint-disable-line @typescript-eslint/no-explicit-any */}
+            </p>
+          </div>
+          <div className="p-6 space-y-3">
+            {[...ungroupedReviews, ...unknownReviews].map((r: any, i: number) => (// eslint-disable-line @typescript-eslint/no-explicit-any
+              <div key={i} className="bg-white dark:bg-slate-800/60 rounded-2xl p-4 border border-amber-100 dark:border-amber-700/30">
+                <div className="flex items-center justify-between mb-2">
+                  <StarDisplay rating={r.rating} size="sm" />
+                  <span className="text-[10px] text-slate-400 font-mono">{r.session_date} · {r.created_at ? new Date(r.created_at).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' }) : ''}</span>
+                </div>
+                {r.review_text && <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{r.review_text}</p>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

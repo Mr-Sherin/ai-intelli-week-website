@@ -122,7 +122,7 @@ export async function GET() {
   try {
     const { data, error } = await supabase
       .from('speaker_reviews')
-      .select('speaker_name, session_date, rating, review_text, created_at')
+      .select('speaker_name, session_date::text, rating, review_text, created_at')
       .order('created_at', { ascending: false });
 
     if (error) {
