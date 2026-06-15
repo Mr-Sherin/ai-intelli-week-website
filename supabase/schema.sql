@@ -107,3 +107,37 @@ CREATE TABLE otps (
 ALTER TABLE otps ENABLE ROW LEVEL SECURITY;
 -- Prevent public access, only accessible via service role in API
 
+-- --------------------------------------------------------
+-- Speaker Reviews Table (anonymous feedback, June 15-19)
+-- --------------------------------------------------------
+CREATE TABLE speaker_reviews (
+  id            UUID                     PRIMARY KEY DEFAULT uuid_generate_v4(),
+  speaker_name  TEXT                     NOT NULL,
+  session_date  DATE                     NOT NULL,
+  rating        SMALLINT                 NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  review_text   TEXT,
+  created_at    TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Index for fast per-speaker aggregation
+CREATE INDEX idx_speaker_reviews_speaker ON speaker_reviews (speaker_name);
+CREATE INDEX idx_speaker_reviews_date    ON speaker_reviews (session_date);
+
+-- Enable Row Level Security
+ALTER TABLE speaker_reviews ENABLE ROW LEVEL SECURITY;
+
+-- Public can insert (anonymous submissions through the API route)
+CREATE POLICY "Public can insert speaker_reviews"
+  ON speaker_reviews
+  FOR INSERT
+  TO public
+  WITH CHECK (true);
+
+-- Public can read aggregate data (no identifying info stored, so safe)
+CREATE POLICY "Public can read speaker_reviews"
+  ON speaker_reviews
+  FOR SELECT
+  TO public
+  USING (true);
+
+-- No public update or delete

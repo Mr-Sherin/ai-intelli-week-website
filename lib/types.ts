@@ -25,3 +25,12 @@ export interface Registration {
   ticket_id?: string;
   created_at?: string;
 }
+
+export interface SpeakerReview {
+  id?: string;
+  speaker_name: string;
+  session_date: string;   // YYYY-MM-DD
+  rating: number;         // 1–5
+  review_text?: string | null;
+  created_at?: string;
+}

@@ -14,6 +14,7 @@ export default function Navbar() {
     { name: 'Schedule', href: '/#schedule' },
     { name: 'Speakers', href: '/speakers' },
     { name: 'Registration', href: '/register' },
+    { name: 'Reviews', href: '/review' },
   ];
 
   return (

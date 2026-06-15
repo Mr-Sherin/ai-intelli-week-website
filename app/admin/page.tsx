@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Lock, Mail, Key, Download, RefreshCw, FileText, CheckCircle2, QrCode, Trash2, IdCard, Undo2, Search, ArrowDownUp, Send } from 'lucide-react';
+import { Lock, Mail, Key, Download, RefreshCw, FileText, CheckCircle2, QrCode, Trash2, IdCard, Undo2, Search, ArrowDownUp, Send, Star, MessageSquare, BarChart3 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import QRScanner from '@/components/QRScanner';
 import AttendanceTable from '@/components/AttendanceTable';
@@ -15,7 +15,9 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [registrations, setRegistrations] = useState<any[]> /* eslint-disable-line @typescript-eslint/no-explicit-any */([]);
-  const [activeTab, setActiveTab] = useState<'registrations' | 'scanner' | 'attendance'>('registrations');
+  const [activeTab, setActiveTab] = useState<'registrations' | 'scanner' | 'attendance' | 'reviews'>('registrations');
+  const [reviews, setReviews] = useState<any[]>([]); // eslint-disable-line @typescript-eslint/no-explicit-any
+  const [reviewsLoading, setReviewsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<'recent' | 'alphabetical'>('recent');
   const [selectedTicket, setSelectedTicket] = useState<any | null>(null);
@@ -48,6 +50,25 @@ export default function AdminDashboard() {
       clearInterval(intervalId);
     };
   }, [isLoggedIn, email, password]);
+
+  // Fetch reviews when the reviews tab is opened
+  const fetchReviews = async () => {
+    setReviewsLoading(true);
+    try {
+      const res = await fetch('/api/reviews');
+      const json = await res.json();
+      if (res.ok) setReviews(json.reviews || []);
+    } catch {
+      // silent
+    } finally {
+      setReviewsLoading(false);
+    }
+  };
+
+  const handleTabChange = (tab: 'registrations' | 'scanner' | 'attendance' | 'reviews') => {
+    setActiveTab(tab);
+    if (tab === 'reviews') fetchReviews();
+  };
 
   const filteredAndSortedRegistrations = registrations
     .filter(reg => {
@@ -322,24 +343,36 @@ export default function AdminDashboard() {
             <p className="text-slate-500 dark:text-slate-400 font-medium mt-1">Live Registration Data</p>
           </div>
           
-          <div className="flex bg-slate-200 dark:bg-slate-800 p-1 rounded-xl w-full md:w-auto overflow-hidden">
+          <div className="flex bg-slate-200 dark:bg-slate-800 p-1 rounded-xl w-full md:w-auto overflow-x-auto">
             <button
-              onClick={() => setActiveTab('registrations')}
-              className={`flex-1 md:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'registrations' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+              onClick={() => handleTabChange('registrations')}
+              className={`flex-1 md:flex-none px-5 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${activeTab === 'registrations' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
             >
               Registrations
             </button>
             <button
-              onClick={() => setActiveTab('scanner')}
-              className={`flex-1 md:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'scanner' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+              onClick={() => handleTabChange('scanner')}
+              className={`flex-1 md:flex-none px-5 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${activeTab === 'scanner' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
             >
               QR Scanner
             </button>
             <button
-              onClick={() => setActiveTab('attendance')}
-              className={`flex-1 md:flex-none px-6 py-2 rounded-lg font-bold text-sm transition-all ${activeTab === 'attendance' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+              onClick={() => handleTabChange('attendance')}
+              className={`flex-1 md:flex-none px-5 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap ${activeTab === 'attendance' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
             >
               Attendance
+            </button>
+            <button
+              onClick={() => handleTabChange('reviews')}
+              className={`flex-1 md:flex-none px-5 py-2 rounded-lg font-bold text-sm transition-all whitespace-nowrap flex items-center gap-1.5 ${activeTab === 'reviews' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
+            >
+              <Star className="w-3.5 h-3.5" />
+              Reviews
+              {reviews.length > 0 && (
+                <span className="ml-1 bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300 text-[10px] font-black px-1.5 py-0.5 rounded-full">
+                  {reviews.length}
+                </span>
+              )}
             </button>
           </div>
         </div>
@@ -357,6 +390,8 @@ export default function AdminDashboard() {
             onRefresh={handleLogin}
             isRefreshing={loading}
           />
+        ) : activeTab === 'reviews' ? (
+          <ReviewsPanel reviews={reviews} loading={reviewsLoading} onRefresh={fetchReviews} />
         ) : (
           <>
             <div className="flex flex-col md:flex-row justify-between mb-4 gap-3">
@@ -620,6 +655,225 @@ export default function AdminDashboard() {
           )}
         </AnimatePresence>
       </div>
+    </div>
+  );
+}
+
+// ─── Session metadata (mirrors the review page schedule) ──────────────────────
+const SESSION_META: Record<string, { speaker: string; topic: string; displayDate: string }> = {
+  '2026-06-15': { speaker: 'Abimel S B Kulumala', topic: 'AI Pentesting & Vibe Coding Basics',    displayDate: 'June 15' },
+  '2026-06-16': { speaker: 'Jobin Selvanose',     topic: 'Anti Gravity & Vibe Coding Full Stack', displayDate: 'June 16' },
+  '2026-06-17': { speaker: 'Arjun G S',           topic: 'AI Building from Scratch',              displayDate: 'June 17' },
+  '2026-06-18': { speaker: 'Alwi Sam',             topic: 'AI Integrated Software Development',   displayDate: 'June 18' },
+  '2026-06-19': { speaker: 'Adithyan L',           topic: 'Agentic AI',                            displayDate: 'June 19' },
+};
+
+const RATING_LABELS: Record<number, string> = { 1: 'Poor', 2: 'Fair', 3: 'Good', 4: 'Very Good', 5: 'Excellent' };
+const RATING_COLORS: Record<number, string> = {
+  1: 'text-red-500',
+  2: 'text-orange-500',
+  3: 'text-amber-500',
+  4: 'text-lime-500',
+  5: 'text-emerald-500',
+};
+
+function StarDisplay({ rating, size = 'sm' }: { rating: number; size?: 'sm' | 'lg' }) {
+  const sz = size === 'lg' ? 'w-6 h-6' : 'w-4 h-4';
+  return (
+    <div className="flex items-center gap-0.5">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <Star
+          key={s}
+          className={`${sz} transition-colors ${
+            s <= rating ? 'fill-amber-400 text-amber-400' : 'text-slate-200 dark:text-slate-700'
+          }`}
+        />
+      ))}
+    </div>
+  );
+}
+
+function ReviewsPanel({
+  reviews,
+  loading,
+  onRefresh,
+}: {
+  reviews: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
+  loading: boolean;
+  onRefresh: () => void;
+}) {
+  // Group reviews by session_date
+  const grouped: Record<string, any[]> = {}; // eslint-disable-line @typescript-eslint/no-explicit-any
+  for (const r of reviews) {
+    const key = r.session_date?.slice(0, 10) ?? 'unknown';
+    if (!grouped[key]) grouped[key] = [];
+    grouped[key].push(r);
+  }
+
+  const orderedDates = Object.keys(SESSION_META).filter((d) => grouped[d]);
+
+  // Overall stats
+  const totalReviews = reviews.length;
+  const overallAvg = totalReviews
+    ? (reviews.reduce((s, r) => s + (r.rating ?? 0), 0) / totalReviews)
+    : 0;
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <div className="flex flex-col items-center gap-4">
+          <RefreshCw className="w-8 h-8 text-slate-400 animate-spin" />
+          <p className="text-slate-500 dark:text-slate-400 font-medium">Loading reviews…</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Summary bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-6">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-5 py-3.5 flex items-center gap-3 shadow-sm">
+            <BarChart3 className="w-5 h-5 text-amber-500" />
+            <div>
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Reviews</p>
+              <p className="text-2xl font-black text-slate-900 dark:text-white">{totalReviews}</p>
+            </div>
+          </div>
+          {totalReviews > 0 && (
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl px-5 py-3.5 flex items-center gap-3 shadow-sm">
+              <Star className="w-5 h-5 fill-amber-400 text-amber-400" />
+              <div>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Overall Avg</p>
+                <p className="text-2xl font-black text-slate-900 dark:text-white">{overallAvg.toFixed(1)}</p>
+              </div>
+            </div>
+          )}
+        </div>
+        <button
+          onClick={onRefresh}
+          disabled={loading}
+          className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm disabled:opacity-50"
+        >
+          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          Refresh
+        </button>
+      </div>
+
+      {/* Empty state */}
+      {totalReviews === 0 && (
+        <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-16 text-center shadow-sm">
+          <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+            <MessageSquare className="w-8 h-8 text-slate-400 dark:text-slate-500" />
+          </div>
+          <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300 mb-1">No reviews yet</h3>
+          <p className="text-sm text-slate-500 dark:text-slate-400">Reviews submitted by participants will appear here, grouped by session date.</p>
+        </div>
+      )}
+
+      {/* Per-day sections */}
+      {orderedDates.map((date) => {
+        const meta = SESSION_META[date];
+        const dayReviews = grouped[date];
+        const avg = dayReviews.reduce((s: number, r: any) => s + (r.rating ?? 0), 0) / dayReviews.length; // eslint-disable-line @typescript-eslint/no-explicit-any
+        const rounded = Math.round(avg);
+        const withText = dayReviews.filter((r: any) => r.review_text?.trim()); // eslint-disable-line @typescript-eslint/no-explicit-any
+
+        // Rating distribution
+        const dist = [5, 4, 3, 2, 1].map((star) => ({
+          star,
+          count: dayReviews.filter((r: any) => r.rating === star).length, // eslint-disable-line @typescript-eslint/no-explicit-any
+        }));
+
+        return (
+          <motion.div
+            key={date}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm"
+          >
+            {/* Day header */}
+            <div className="px-6 py-5 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-slate-50 to-white dark:from-slate-900 dark:to-slate-800/50 flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">{meta.displayDate}, 2026</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-600" />
+                  <span className="text-xs font-bold text-cyan-600 dark:text-cyan-400">{dayReviews.length} review{dayReviews.length !== 1 ? 's' : ''}</span>
+                </div>
+                <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">{meta.speaker}</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{meta.topic}</p>
+              </div>
+              {/* Avg score */}
+              <div className="flex flex-col items-start sm:items-end gap-1">
+                <div className="flex items-baseline gap-2">
+                  <span className={`text-4xl font-black ${RATING_COLORS[rounded] ?? 'text-slate-700 dark:text-slate-300'}`}>
+                    {avg.toFixed(1)}
+                  </span>
+                  <span className="text-slate-400 text-sm font-medium">/ 5</span>
+                </div>
+                <StarDisplay rating={rounded} size="sm" />
+                <p className="text-xs text-slate-400">{RATING_LABELS[rounded] ?? ''}</p>
+              </div>
+            </div>
+
+            <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Rating distribution */}
+              <div className="lg:col-span-1">
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Rating Breakdown</p>
+                <div className="space-y-2">
+                  {dist.map(({ star, count }) => (
+                    <div key={star} className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-slate-500 dark:text-slate-400 w-3">{star}</span>
+                      <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
+                      <div className="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                        <div
+                          className="h-2 bg-gradient-to-r from-amber-400 to-amber-300 rounded-full transition-all duration-500"
+                          style={{ width: dayReviews.length ? `${(count / dayReviews.length) * 100}%` : '0%' }}
+                        />
+                      </div>
+                      <span className="text-xs font-bold text-slate-500 dark:text-slate-400 w-4 text-right">{count}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+                  <p className="text-xs text-slate-400">
+                    <span className="font-bold text-slate-600 dark:text-slate-300">{withText.length}</span> of {dayReviews.length} included written comments
+                  </p>
+                </div>
+              </div>
+
+              {/* Written reviews */}
+              <div className="lg:col-span-2">
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Written Reviews</p>
+                {withText.length === 0 ? (
+                  <div className="flex items-center justify-center py-8 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
+                    <p className="text-sm text-slate-400 dark:text-slate-500">No written comments for this session yet.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+                    {withText.map((r: any, i: number) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
+                      <div
+                        key={i}
+                        className="bg-slate-50 dark:bg-slate-800/60 rounded-2xl p-4 border border-slate-100 dark:border-slate-700/60"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <StarDisplay rating={r.rating} size="sm" />
+                          <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium">
+                            {r.created_at ? new Date(r.created_at).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short' }) : ''}
+                          </span>
+                        </div>
+                        <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{r.review_text}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
     </div>
   );
 }
