@@ -49,6 +49,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!review_text || typeof review_text !== 'string' || review_text.trim().length === 0) {
+      return NextResponse.json(
+        { error: 'A review comment is required.' },
+        { status: 400 }
+      );
+    }
+
     if (typeof rating !== 'number' || rating < 1 || rating > 5) {
       return NextResponse.json(
         { error: 'Rating must be a number between 1 and 5.' },

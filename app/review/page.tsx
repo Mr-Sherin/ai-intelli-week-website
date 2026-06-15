@@ -313,6 +313,7 @@ export default function ReviewPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (rating === 0) { setError('Please give a star rating before submitting.'); return; }
+    if (reviewText.trim().length === 0) { setError('Please share your thoughts before submitting.'); return; }
     setError('');
     setSubmitting(true);
 
@@ -445,7 +446,7 @@ export default function ReviewPage() {
               className="block text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-3"
             >
               Share your thoughts{' '}
-              <span className="text-xs font-normal normal-case text-slate-400">(optional)</span>
+              <span className="text-xs font-normal normal-case text-red-500 dark:text-red-400">*</span>
             </label>
             <textarea
               id="review-text"
