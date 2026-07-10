@@ -23,6 +23,26 @@ A modern, high-performance web application built for the **AI Intelli Week** int
 - **OCR:** [Tesseract.js](https://tesseract.projectnaptha.com/)
 - **Email Service:** Nodemailer
 
+## 📂 Site Structure & Pages
+
+The application is organized into the following main routes:
+
+- **`/` (Home):** The main landing page showcasing the AI Intelli Week event details, countdown, and calls to action.
+- **`/about`:** Provides more information about the event, its objectives, and the organizing chapters.
+- **`/speakers`:** Displays the schedule and profiles of the speakers for the week-long sessions.
+- **`/register`:** The dynamic, multi-step registration form with OTP and OCR payment validation.
+- **`/review`:** A page where attendees can submit reviews and ratings for sessions.
+- **`/ieee-guide`:** Instructions and guidance for IEEE members registering for the event.
+- **`/admin`:** The secure admin dashboard for managing registrations, verifying tickets, and scanning QR codes.
+
+## 🔐 Accessing the Admin Dashboard
+
+The Admin Dashboard provides real-time data on registrations, OTP verification statuses, and tools to approve/reject uploaded payment screenshots.
+
+1. Navigate to `/admin` in your browser.
+2. Enter your authorized administrator email and password credentials. 
+3. After logging in, you'll be able to view live registrations, scan QR codes for attendance, export data to CSV, and send tickets to verified attendees.
+
 ## 👨‍💻 Developed By
 
 **Sherin R Fertin**
